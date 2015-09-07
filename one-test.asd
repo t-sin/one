@@ -13,7 +13,9 @@
   :license "MIT"
   :depends-on (:one
                :prove)
-  :components ((:test-file "one"))
+  :components ((:module "t"
+                :components
+                ((:test-file "one"))))
   :description "Test system for one"
 
   :defsystem-depends-on (:prove-asdf)
