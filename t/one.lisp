@@ -14,10 +14,10 @@
 
 (subtest "for --- expansion"
    (is-expand (one:for (line #P"path"))
-              (with-open-file (in #P"path"
+              (with-open-file ($in #P"path"
                                :direction :input
                                :element-type 'character)
-                (loop for line = (read in nil :eof)
+                (loop for line = (read $in nil :eof)
                    until (eq line :eof)
                    collect line)))
 
@@ -28,30 +28,30 @@
 
    (is-expand (one:for (line #P"path")
                 (format t "~a~%" line))
-              (with-open-file (in #P"path"
+              (with-open-file ($in #P"path"
                                :direction :input
                                :element-type 'character)
-                (loop for line = (read in nil :eof)
+                (loop for line = (read $in nil :eof)
                    until (eq line :eof)
                    do (progn (format t "~a~%" line)))))
 
    (is-expand (one:for (line #P"path")
                 (format t "~a~%" line)
                 (format t "~a2~%" line))
-              (with-open-file (in #P"path"
+              (with-open-file ($in #P"path"
                                :direction :input
                                :element-type 'character)
-                (loop for line = (read in nil :eof)
+                (loop for line = (read $in nil :eof)
                    until (eq line :eof)
                    do (progn (format t "~a~%" line)
                              (format t "~a2~%" line))))))
 
 (subtest "forl --- expansion"
    (is-expand (one:forl (line #P"path"))
-              (with-open-file (in #P"path"
+              (with-open-file ($in #P"path"
                                :direction :input
                                :element-type 'character)
-                (loop for line = (read-line in nil :eof)
+                (loop for line = (read-line $in nil :eof)
                    until (eq line :eof)
                    collect line)))
 
@@ -62,20 +62,20 @@
 
    (is-expand (one:forl (line #P"path")
                 (format t "~a~%" line))
-              (with-open-file (in #P"path"
+              (with-open-file ($in #P"path"
                                :direction :input
                                :element-type 'character)
-                (loop for line = (read-line in nil :eof)
+                (loop for line = (read-line $in nil :eof)
                    until (eq line :eof)
                    do (progn (format t "~a~%" line)))))
 
    (is-expand (one:forl (line #P"path")
                 (format t "~a~%" line)
                 (format t "~a2~%" line))
-              (with-open-file (in #P"path"
+              (with-open-file ($in #P"path"
                                :direction :input
                                :element-type 'character)
-                (loop for line = (read-line in nil :eof)
+                (loop for line = (read-line $in nil :eof)
                    until (eq line :eof)
                    do (progn (format t "~a~%" line)
                              (format t "~a2~%" line))))))
