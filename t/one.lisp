@@ -7,78 +7,69 @@
 
 ;; NOTE: To run this test file, execute `(asdf:test-system :one)' in your Lisp.
 
-(plan 5)
+(plan 7)
 
 (defun testdat (path)
   (merge-pathnames path *load-pathname*))
 
-(subtest "for --- expansion"
-   (is-expand (one:for (line #P"path"))
-              (with-open-file ($in #P"path"
-                               :direction :input
-                               :element-type 'character)
-                (loop for line = (read $in nil :eof)
-                   one::until (eq line :eof)
-                   one::collect line)))
 
-   (is-expand (one:for (line one:stdin))
-              (loop for line = (read one::*standard-input* nil :eof)
-                 one::until (eq line :eof)
-                 one::collect line))
+(subtest "body-form --- loop body"
+  (is (one::body-form 'line nil)
+      '(one::collect line))
+  (is (one::body-form 'line '(1 2 3 4))
+      '(do (progn 1 2 3 4))))
 
-   (is-expand (one:for (line #P"path")
-                (format t "~a~%" line))
-              (with-open-file ($in #P"path"
-                               :direction :input
-                               :element-type 'character)
-                (loop for line = (read $in nil :eof)
-                   one::until (eq line :eof)
-                   one::do (progn (format t "~a~%" line)))))
+(subtest "loop-form --- whole loop"
+  (is (one::loop-form 'line 'in 'reader nil)
+      '(loop for line = (reader in nil :eof)
+          one::until (eq line :eof)
+          one::collect line))
+  (is (one::loop-form 'line 'in 'reader '(body1 body2))
+      '(loop for line = (reader in nil :eof)
+          one::until (eq line :eof)
+          one::do (progn body1 body2))))
 
-   (is-expand (one:for (line #P"path")
-                (format t "~a~%" line)
-                (format t "~a2~%" line))
-              (with-open-file ($in #P"path"
-                               :direction :input
-                               :element-type 'character)
-                (loop for line = (read $in nil :eof)
-                   one::until (eq line :eof)
-                   one::do (progn (format t "~a~%" line)
-                             (format t "~a2~%" line))))))
+(subtest "with-input-from-file"
+  (is-expand (one::with-input-from-file (var "path") body)
+             (with-open-file (var "path"
+                              :direction :input
+                              :element-type 'character)
+               body)))
 
-(subtest "forl --- expansion"
-   (is-expand (one:forl (line #P"path"))
-              (with-open-file ($in #P"path"
-                               :direction :input
-                               :element-type 'character)
-                (loop for line = (read-line $in nil :eof)
-                   one::until (eq line :eof)
-                   one::collect line)))
+(subtest "for-form --- whole form without reader functinon"
 
-   (is-expand (one:forl (line one:stdin))
-              (loop for line = (read-line one::*standard-input* nil :eof)
-                 one::until (eq line :eof)
-                 one::collect line))
+  (let ((prove.test::*gensym-alist*))
+    (is (one::for-form 'line "path" 'read 'nil)
+        '(one::with-input-from-file ($fin "path")
+          (loop for line = (read $fin nil :eof)
+             one::until (eq line :eof)
+             one::collect line))
+        :test #'prove.test::gensym-tree-equal))
 
-   (is-expand (one:forl (line #P"path")
-                (format t "~a~%" line))
-              (with-open-file ($in #P"path"
-                               :direction :input
-                               :element-type 'character)
-                (loop for line = (read-line $in nil :eof)
-                   one::until (eq line :eof)
-                   one::do (progn (format t "~a~%" line)))))
+  (let ((prove.test::*gensym-alist*))
+    (is (one::for-form 'line #P"path" 'read-line nil)
+        '(one::with-input-from-file ($fin #P"path")
+          (loop for line = (read-line $fin nil :eof)
+             one::until (eq line :eof)
+             one::collect line))
+        :test #'prove.test::gensym-tree-equal))
 
-   (is-expand (one:forl (line #P"path")
-                (format t "~a~%" line)
-                (format t "~a2~%" line))
-              (with-open-file ($in #P"path"
-                               :direction :input
-                               :element-type 'character)
-                (loop for line = (read-line $in nil :eof)
-                   one::until (eq line :eof)
-                   one::do (progn (format t "~a~%" line)
-                             (format t "~a2~%" line))))))
+  (let ((prove.test::*gensym-alist*))
+    (is (one::for-form 'line #P"path" 'read-line '(body1 body2))
+        '(one::with-input-from-file ($fin #P"path")
+          (loop for line = (read-line $fin nil :eof)
+             one::until (eq line :eof)
+             one::do (progn body1 body2)))
+        :test #'prove.test::gensym-tree-equal))
+
+  (is (one::for-form 'line :stdin 'read-char '(body1 body2))
+       '(loop for line = (read-char one::*standard-input* nil :eof)
+           one::until (eq line :eof)
+           one::do (progn body1 body2)))
+
+   (subtest "return nil when in is not one of string, pathname and :stdin"
+            (is (one::for-form 'l 42 'read-line '(body))
+                nil)))
 
 
 (subtest "for (using read)"
@@ -119,12 +110,12 @@
 3
 5
 7"))
-      (is (one:for (l (testdat "strs.txt"))
+      (is (one:forl (l (testdat "strs.txt"))
             (setf s (format nil "~a ~a" s l)))
           nil)
       (is s " 1 3 5 7"))
     (let ((s ""))
-      (is (one:for (l (testdat "strs.txt"))
+      (is (one:forl (l (testdat "strs.txt"))
             (setf s (format nil "~a ~a" s l)))
           nil)
       (is s " the quick brown fox jumps over the red lazy dog"))))
