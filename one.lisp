@@ -7,8 +7,6 @@
 (in-package :one)
 
 
-(defparameter stdin *standard-input*)
-
 (defun body-form (var body)
   (if body
       `(do (progn ,@body))
@@ -25,13 +23,19 @@
                     :element-type 'character) ; use :inquisitor
      ,@body))
 
-(defmacro for ((var in) &body body)
+(defun for-form (var in reader body)
   (cond ((or (typep in 'string)
              (typep in 'pathname))
          (let ((fin (gensym)))
-           `(with-open-file (,fin ,in
-                             :direction :input
-                             :element-type 'character)
-              ,(loop-form var fin 'read body))))
-        ((eq in 'stdin)
-         (loop-form var stdin 'read body))))
+           `(with-input-from-file (,fin ,in)
+              ,(loop-form var fin reader body))))
+        ((eq in :stdin)
+         (loop-form var '*standard-input* reader body))))
+
+
+(defmacro for ((var in) &body body)
+  (for-form var in 'read body))
+
+
+(defmacro forl ((var in) &body body)
+  (for-form var in 'read-line body))
