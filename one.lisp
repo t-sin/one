@@ -19,12 +19,11 @@
       until (eq ,var :eof)
       ,@(body-form var body)))
 
-(defmacro with-file-input ((var in) &body body)
-  (let ((fin (gensym)))
-    `(with-open-file (,fin ,in
-                      :direction :input
-                      :element-type 'character)
-       ,@body)))
+(defmacro with-input-from-file ((var path) &body body)
+  `(with-open-file (,var ,path
+                    :direction :input
+                    :element-type 'character) ; use :inquisitor
+     ,@body))
 
 (defmacro for ((var in) &body body)
   (cond ((or (typep in 'string)
