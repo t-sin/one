@@ -18,13 +18,13 @@
                                :direction :input
                                :element-type 'character)
                 (loop for line = (read $in nil :eof)
-                   until (eq line :eof)
-                   collect line)))
+                   one::until (eq line :eof)
+                   one::collect line)))
 
    (is-expand (one:for (line one:stdin))
-              (loop for line = (read cl:*standard-input* nil :eof)
-                 until (eq line :eof)
-                 collect line))
+              (loop for line = (read one::*standard-input* nil :eof)
+                 one::until (eq line :eof)
+                 one::collect line))
 
    (is-expand (one:for (line #P"path")
                 (format t "~a~%" line))
@@ -32,8 +32,8 @@
                                :direction :input
                                :element-type 'character)
                 (loop for line = (read $in nil :eof)
-                   until (eq line :eof)
-                   do (progn (format t "~a~%" line)))))
+                   one::until (eq line :eof)
+                   one::do (progn (format t "~a~%" line)))))
 
    (is-expand (one:for (line #P"path")
                 (format t "~a~%" line)
@@ -42,8 +42,8 @@
                                :direction :input
                                :element-type 'character)
                 (loop for line = (read $in nil :eof)
-                   until (eq line :eof)
-                   do (progn (format t "~a~%" line)
+                   one::until (eq line :eof)
+                   one::do (progn (format t "~a~%" line)
                              (format t "~a2~%" line))))))
 
 (subtest "forl --- expansion"
@@ -52,13 +52,13 @@
                                :direction :input
                                :element-type 'character)
                 (loop for line = (read-line $in nil :eof)
-                   until (eq line :eof)
-                   collect line)))
+                   one::until (eq line :eof)
+                   one::collect line)))
 
    (is-expand (one:forl (line one:stdin))
-              (loop for line = (read-line cl:*standard-input* nil :eof)
-                 until (eq line :eof)
-                 collect line))
+              (loop for line = (read-line one::*standard-input* nil :eof)
+                 one::until (eq line :eof)
+                 one::collect line))
 
    (is-expand (one:forl (line #P"path")
                 (format t "~a~%" line))
@@ -66,8 +66,8 @@
                                :direction :input
                                :element-type 'character)
                 (loop for line = (read-line $in nil :eof)
-                   until (eq line :eof)
-                   do (progn (format t "~a~%" line)))))
+                   one::until (eq line :eof)
+                   one::do (progn (format t "~a~%" line)))))
 
    (is-expand (one:forl (line #P"path")
                 (format t "~a~%" line)
@@ -76,8 +76,8 @@
                                :direction :input
                                :element-type 'character)
                 (loop for line = (read-line $in nil :eof)
-                   until (eq line :eof)
-                   do (progn (format t "~a~%" line)
+                   one::until (eq line :eof)
+                   one::do (progn (format t "~a~%" line)
                              (format t "~a2~%" line))))))
 
 
