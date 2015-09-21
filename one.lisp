@@ -1,8 +1,7 @@
 (in-package :cl-user)
 (defpackage one
   (:use :cl)
-  (:export :stdin
-           :for
+  (:export :for
            :forl))
 (in-package :one)
 
