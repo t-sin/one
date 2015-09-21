@@ -16,8 +16,8 @@
 
 (defun loop-form (var input-stream read-fn body)
   `(loop for ,var = (,read-fn ,input-stream nil :eof)
-         until (eq ,var :eof)
-         ,@(body-form var body)))
+      until (eq ,var :eof)
+      ,@(body-form var body)))
 
 (defmacro with-file-input ((var in) &body body)
   (let ((fin (gensym)))
