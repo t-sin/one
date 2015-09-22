@@ -1,5 +1,8 @@
 # One - Input reading for one-liner
 
+[![Build Status](https://travis-ci.org/t-sin/one.svg?branch=master)](https://travis-ci.org/t-sin/one)
+[![Circle CI](https://circleci.com/gh/t-sin/one.svg?style=svg)](https://circleci.com/gh/t-sin/one)
+
 One provide each-line iteration to text file and standard-input.
 
 
