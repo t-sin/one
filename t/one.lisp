@@ -13,6 +13,19 @@
   (merge-pathnames path *load-pathname*))
 
 
+(subtest "read-for"
+  (with-input-from-string (in "1 2 3 4")
+    (is (one::read-for in #'read #'identity)
+        '(1 2 3 4)))
+  (with-input-from-string (in "1 2 3 4")
+    (is (one::read-for in #'read-line #'identity)
+        '("1 2 3 4")))
+  (with-input-from-string (in "1 2 3 4")
+    (is (one::read-for in #'read #'1+)
+        '(2 3 4 5)))
+  (with-input-from-string (in "a b c :eof d")
+    (is (one::read-for in #'read #'identity)
+        '(a b c :eof d))))
 
 (subtest "with-input-from-file"
   (is-expand (one::with-input-from-file (var "path") body)
@@ -20,6 +33,18 @@
                               :direction :input
                               :element-type 'character)
                body)))
+
+(subtest "call-read-for"
+  (is (one::call-read-for (namestring (testdat "nums.txt")) #'read)
+      '(1 3 5 7))
+  (is (one::call-read-for (testdat "nums.txt") #'read #'1+)
+      '(2 4 6 8))
+  (with-input-from-string (in "1 3 5 7")
+    (let ((*standard-input* in))
+      (is (one::call-read-for :stdin #'read)
+          '(1 3 5 7))))
+  (is (one::call-read-for 42 #'read)
+      nil))
 
 
 (subtest "for (using read)"
