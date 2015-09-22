@@ -7,7 +7,7 @@
 
 ;; NOTE: To run this test file, execute `(asdf:test-system :one)' in your Lisp.
 
-(plan 7)
+(plan 6)
 
 (defun testdat (path)
   (merge-pathnames path *load-pathname*))
