@@ -52,9 +52,9 @@
     (is (one:for (l (testdat "nums.txt")))
         '(1 3 5 7))
     (is (one:for (l (testdat "strs.txt")))
-        '("the" "quick" "brown" "fox"
-          "jumps" "over"
-          "the" "red" "lazy" "dog")))
+        '(the quick brown fox
+          jumps over
+          the red lazy dog)))
 
   (subtest "with body"
     (let ((n 0))
