@@ -103,7 +103,8 @@
 (subtest "interacting to *standard-input*"
   (with-stdin ("1 2 3")
     (is (one:for (l :stdin))
-        '(1 2 3))
+        '(1 2 3)))
+  (with-stdin  ("1 2 3")
     (is (one:forl (l :stdin))
         '("1 2 3"))))
 
