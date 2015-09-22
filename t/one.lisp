@@ -103,9 +103,9 @@
 
 (subtest "interacting to *standard-input*"
   (with-stdin ("1 2 3")
-    (is (one:for (l one:stdin))
+    (is (one:for (l :stdin))
         '(1 2 3))
-    (is (one:forl (l one:stdin))
+    (is (one:forl (l :stdin))
         '("1 2 3"))))
 
 
