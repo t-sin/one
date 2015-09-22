@@ -65,7 +65,7 @@
     (let ((s ""))
       (one:for (l (testdat "strs.txt"))
                (setf s (format nil "~a ~a" s l)))
-      (is s " the quick brown fox jumps over the red lazy dog"))))
+      (is s " THE QUICK BROWN FOX JUMPS OVER THE RED LAZY DOG"))))
 
 (subtest "forl (for line)"
   (subtest "with no body"
