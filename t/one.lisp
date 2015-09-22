@@ -80,18 +80,15 @@
           "lazy dog")))
 
   (subtest "with body"
-    (let ((s "1
-3
-5
-7"))
-      (is (one:forl (l (testdat "strs.txt"))
-            (setf s (format nil "~a ~a" s l)))
-          nil)
+    (is (one:forl (l (testdat "nums.txt")))
+        '("1" "3" "5" "7"))
+    (let ((s ""))
+      (one:forl (l (testdat "nums.txt"))
+                (setf s (format nil "~a ~a" s l)))
       (is s " 1 3 5 7"))
     (let ((s ""))
-      (is (one:forl (l (testdat "strs.txt"))
-            (setf s (format nil "~a ~a" s l)))
-          nil)
+      (one:forl (l (testdat "strs.txt"))
+                (setf s (format nil "~a ~a" s l)))
       (is s " the quick brown fox jumps over the red lazy dog"))))
 
 (defmacro with-stdin ((str) &body body)
