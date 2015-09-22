@@ -60,12 +60,11 @@
     (let ((n 0))
       (is (one:for (l (testdat "nums.txt"))
             (incf n l))
-          nil)
+          '(1 4 9 16))
       (is n (reduce #'+ '(1 3 5 7))))
     (let ((s ""))
-      (is (one:for (l (testdat "strs.txt"))
-            (setf s (format nil "~a ~a" s l)))
-          nil)
+      (one:for (l (testdat "strs.txt"))
+               (setf s (format nil "~a ~a" s l)))
       (is s " the quick brown fox jumps over the red lazy dog"))))
 
 (subtest "forl (for line)"
