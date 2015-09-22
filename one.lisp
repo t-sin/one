@@ -27,10 +27,14 @@
         ((eq in :stdin)
          (read-for *standard-input* read-fn body-fn))))
 
+(defmacro deffor (name read-fn)
+  (let ((line (gensym)))
+    `(defmacro ,name ((var in) &body body)
+       (let ((,line (gensym)))
+         (if body
+             `(call-read-for ,in ,,read-fn
+                             (lambda (,,line) (let ((,var ,,line)) ,@body)))
+             `(call-read-for ,in ,,read-fn))))))
 
-(defmacro for ((var in) &body body)
-  (for-form var in 'read body))
-
-
-(defmacro forl ((var in) &body body)
-  (for-form var in 'read-line body))
+(deffor for #'read)
+(deffor forl #'read-line)
