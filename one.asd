@@ -20,7 +20,7 @@
   :license "MIT"
   :depends-on ()
   :components ((:file "one"))
-  :description "Utilities for one-liner"
+  :description "Input reading for one-liner"
   :long-description
   #.(with-open-file (stream (merge-pathnames
                              #p"README.markdown"

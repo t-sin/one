@@ -1,4 +1,4 @@
-# One - Utilities for one-liner
+# One - Input reading for one-liner
 
 One provide each-line iteration to text file and standard-input.
 
