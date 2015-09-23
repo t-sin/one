@@ -1,5 +1,6 @@
 (in-package :cl-user)
 (defpackage one
+  (:nicknames :o)
   (:use :cl)
   (:export :for
            :forl))
