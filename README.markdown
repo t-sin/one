@@ -37,8 +37,7 @@ For example, you want to summate second columns of `nums.dat`, you must write co
 
     $ cat nums.dat | cut -d ',' -f 2 | ccl -Q -b -e '(print (loop for line = (read *standard-input* nil :eof) until (eq :eof line) sum line))'
     9
-    
-Addi
+
 _Seriously!? Maybe it's because of the specters!!_
 
 But wait, now.
