@@ -28,3 +28,15 @@ CL-USER> (for #P"seq-10.txt" /line print)
 1
 ...
 ```
+
+### Running on the standard input
+
+```sh
+$ seq 10 | ros -s one -e '(o:for - /line print)'
+# => (loop
+       :for e := (read-line *standard-input* nil :eof)
+       :do (print e))
+0
+1
+...
+```
