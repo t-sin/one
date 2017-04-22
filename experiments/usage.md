@@ -9,13 +9,15 @@ Trying to design `one`.
 ### Input string
 
 ```lisp
-CL-USER> (for "path/to/lisp" (split #\/) print)
+CL-USER> (for "path/to/lisp" (/split #\/) print)
 ;=> (loop
 ;     :for e :in (split-sequence:split-sequence #\/ "path/to/lisp")
 ;     :do (print e))
 ```
 
 ### Running on the sequence-thing
+
+Prefix `/` means `per`. Functions which has the prefix split input into many elements.
 
 ```lisp
 CL-USER> (for (alexandria:iota 10) print)
