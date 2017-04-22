@@ -6,6 +6,15 @@ Trying to design `one`.
 
 ## Input
 
+### Input string
+
+```lisp
+CL-USER> (for "path/to/lisp" (split #\/) print)
+;=> (loop
+;     :for e :in (split-sequence:split-sequence #\/ "path/to/lisp")
+;     :do (print e))
+```
+
 ### Running on the sequence-thing
 
 ```lisp
