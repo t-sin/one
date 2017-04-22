@@ -63,3 +63,16 @@ CL-USER> (for '(0 1 2 3) 1+ 1+)
 ;     :collect (1+ (1+ e)))
 (2 3 4 5)
 ```
+
+### Filter or folding
+
+Prefix `>` means `filtering` or `folding`. Functions which has the prefix fold input into lesser elements.
+
+```lisp
+CL-USRE> (for '(0 1 2 3) >oddp)
+;=> (loop
+;     :for e :in '(0 1 2 3)
+;     :when (oddp e)
+;     :collect e)
+(1 3)
+```
