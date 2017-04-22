@@ -51,3 +51,15 @@ $ seq 10 | ros -s one -e '(o:for - /line print)'
 1
 ...
 ```
+
+## Chaining
+
+### Basic chaining
+
+```lisp
+CL-USER> (for '(0 1 2 3) 1+ 1+)
+;=> (loop
+;     :for e :in '(0 1 2 3)
+;     :collect (1+ (1+ e)))
+(2 3 4 5)
+```
