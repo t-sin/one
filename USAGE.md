@@ -8,6 +8,8 @@ Trying to design `one`.
 
 ### Input string
 
+Prefix `/` means `per`. Functions which has the prefix split input into many elements.
+
 ```lisp
 CL-USER> (for "path/to/lisp" (/split #\/) print)
 ;=> (loop
@@ -16,8 +18,6 @@ CL-USER> (for "path/to/lisp" (/split #\/) print)
 ```
 
 ### Running on the sequence-thing
-
-Prefix `/` means `per`. Functions which has the prefix split input into many elements.
 
 ```lisp
 CL-USER> (for (alexandria:iota 10) print)
