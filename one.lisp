@@ -4,6 +4,19 @@
   (:use :cl))
 (in-package :one)
 
+#|
+CL-USER>  (chain 3 #'id #'$print #'identity)
+;=> 3
+3
+|#
+(defun chain (input &rest operators)
+  (loop
+     :for op :in operators
+     :for chained-op := op :then (funcall chained-op op)
+     :finally (return-from chain (funcall chained-op input))))
+
+;;; they are constructive operators, not core.
+;;; they will be moved when finished experimental
 (defun id (chained-op)
   (lambda (input)
     (funcall chained-op input)))
@@ -19,13 +32,3 @@
        :while line
        :do (funcall next-op line))))
 
-#|
-CL-USER>  (chain 3 #'id #'$print #'identity)
-;=> 3
-3
-|#
-(defun chain (input &rest operators)
-  (loop
-     :for op :in operators
-     :for chained-op := op :then (funcall chained-op op)
-     :finally (return-from chain (funcall chained-op input))))
