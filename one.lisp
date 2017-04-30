@@ -26,8 +26,9 @@ CL-USER>  (chain 3 #'id #'$print #'identity)
     (1+ (funcall chained-op input))))
 
 (defun reads (chained-op)
-  (lambda (string)
-    (read-from-string (funcall chained-op string))))
+  (lambda (str)
+    (format t "'~s' '~s'~%" chained-op str)
+    (read-from-string (funcall chained-op str))))
 
 (defun $print (chained-op)
   (lambda (input)
@@ -39,4 +40,3 @@ CL-USER>  (chain 3 #'id #'$print #'identity)
        :for line := (read-line stream nil nil)
        :while line
        :collect (funcall next-op line))))
-
