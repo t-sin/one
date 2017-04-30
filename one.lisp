@@ -15,26 +15,30 @@ CL-USER>  (chain 3 #'id #'$print #'identity)
      :for chained-op := (funcall op #'identity) :then (funcall op chained-op)
      :finally (return-from chain (funcall chained-op input))))
 
+(defmacro define-op (fn-name (input-var) &body body)
+  (let ((input (gensym))
+        (chained-op (gensym)))
+    `(defun ,fn-name (,chained-op)
+       (lambda (,input)
+         (let ((,input-var (funcall ,chained-op ,input)))
+           ,@body)))))
+
 ;;; they are constructive operators, not core.
 ;;; they will be moved when finished experimental
-(defun id (chained-op)
-  (lambda (input)
-    (funcall chained-op input)))
+(define-op id (obj)
+  obj)
 
-(defun add1 (chained-op)
-  (lambda (input)
-    (1+ (funcall chained-op input))))
+(define-op add1 (num)
+  (1+ num))
 
-(defun reads (chained-op)
-  (lambda (str)
-    (format t "'~s' '~s'~%" chained-op str)
-    (read-from-string (funcall chained-op str))))
+(define-op reads (str)
+  (read-from-string str))
 
-(defun $print (chained-op)
-  (lambda (input)
-    (print (funcall chained-op input))))
+(define-op $print (obj)
+  (print obj))
 
-(defun /line (next-op)
+;; cannot define with define-op
+(defun /line (chained-op)
   (lambda (stream)
     (loop
        :for line := (read-line stream nil nil)
