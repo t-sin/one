@@ -16,12 +16,10 @@ CL-USER>  (chain 3 #'id #'$print #'identity)
      :finally (return-from chain (funcall chained-op input))))
 
 (defmacro define-op (fn-name (input-var) &body body)
-  (let ((input (gensym))
-        (chained-op (gensym)))
+  (let ((chained-op (gensym)))
     `(defun ,fn-name (,chained-op)
-       (lambda (,input)
-         (let ((,input-var (funcall ,chained-op ,input)))
-           ,@body)))))
+       (lambda (,input-var)
+         (funcall ,chained-op (progn ,@body))))))
 
 ;;; they are constructive operators, not core.
 ;;; they will be moved when finished experimental
