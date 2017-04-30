@@ -12,10 +12,7 @@ CL-USER>  (chain 3 #'id #'$print #'identity)
 (defun chain (input &rest operators)
   (loop
      :for (op . rest) :on operators
-     :for chained-op := op :then (funcall chained-op op)
-     :do (format t "~s ~s~%" op rest)
-     :when (and (listp chained-op) (not (null chained-op)))
-     :do (return-from chain (values input chained-op rest))
+     :for chained-op := (funcall op #'identity) :then (funcall op chained-op)
      :finally (return-from chain (funcall chained-op input))))
 
 ;;; they are constructive operators, not core.
