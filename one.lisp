@@ -14,7 +14,7 @@ CL-USER>  (chain 3 #'id #'$print #'identity)
      :for (op . rest) :on operators
      :for chained-op := op :then (funcall chained-op op)
      :do (format t "~s ~s~%" op rest)
-     :when (and (not (null rest)) (listp chained-op))
+     :when (and (listp chained-op) (not (null chained-op)))
      :do (return-from chain (values input chained-op rest))
      :finally (return-from chain (funcall chained-op input))))
 
@@ -29,9 +29,9 @@ CL-USER>  (chain 3 #'id #'$print #'identity)
     (print (funcall chained-op input))))
 
 (defun /line (next-op)
-  (lambda (input)
+  (lambda (stream)
     (loop
-       :for line := (read-line input nil nil)
+       :for line := (read-line stream nil nil)
        :while line
        :collect (funcall next-op line))))
 
