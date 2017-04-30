@@ -43,4 +43,4 @@ CL-USER>  (chain 3 #'id #'$print #'identity)
     (loop
        :for line := (read-line stream nil nil)
        :while line
-       :collect (funcall next-op line))))
+       :collect (funcall chained-op line))))
