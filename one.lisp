@@ -21,6 +21,14 @@ CL-USER>  (chain 3 #'id #'$print #'identity)
   (lambda (input)
     (funcall chained-op input)))
 
+(defun add1 (chained-op)
+  (lambda (input)
+    (1+ (funcall chained-op input))))
+
+(defun reads (chained-op)
+  (lambda (string)
+    (read-from-string (funcall chained-op string))))
+
 (defun $print (chained-op)
   (lambda (input)
     (print (funcall chained-op input))))
