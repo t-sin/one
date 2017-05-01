@@ -11,7 +11,7 @@ CL-USER>  (chain 3 #'id #'$print #'identity)
 |#
 (defun chain (input &rest operators)
   (loop
-     :for (op . rest) :on operators
+     :for (op . rest) :on (reverse operators)
      :for chained-op := (funcall op #'identity) :then (funcall op chained-op)
      :finally (return-from chain (funcall chained-op input))))
 
@@ -37,13 +37,9 @@ CL-USER>  (chain 3 #'id #'$print #'identity)
 
 ;; cannot define with define-op
 #|
-don't working...
-CL-USER> (with-input-from-string (in "42
-43
-44")
-           (chain in #'/line #'reads))
-; Evaluation aborted on #<TYPE-ERROR expected-type: "STRING"
-             datum: #<SB-IMPL::STRING-INPUT-STREAM {10047FD863}>>.
+CL-USER> (with-input-from-string (in (format nil "42~%43~%44"))
+           (chain in #'/line #'reads #'add1))
+(43 44 45)
 |#
 (defun /line (chained-op)
   (lambda (stream)
