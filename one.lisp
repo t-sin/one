@@ -39,6 +39,8 @@ Or chain-operators is a function that is a transform."
 (define-chain-op $print (obj)
   (print obj))
 
+;;; add-n: parametric chain operator
+;;(defun add-n (num n) nil)
 
 ;;; per or split operators?
 ;;; cannot define with define-op
