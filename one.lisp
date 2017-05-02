@@ -5,16 +5,16 @@
 (in-package :one)
 
 #|
-CL-USER>  (chain 3 #'id #'$print)
+CL-USER> (funcall (chain #'id #'$print) 3)
 ;=> 3
 3
 |#
-(defun chain (input &rest chain-operators)
+(defun chain (&rest chain-operators)
   "Chain operators serially. Operators specified must be defined with `define-chain-op`."
   (loop
      :for (op . rest) :on (reverse chain-operators)
      :for chained-op := (funcall op #'identity) :then (funcall op chained-op)
-     :finally (return-from chain (funcall chained-op input))))
+     :finally (return-from chain chained-op)))
 
 (defmacro define-chain-op (fn-name (input-var) &body body)
   "Define chain-operator. Chain-operators is a function that returns single result.
