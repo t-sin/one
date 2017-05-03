@@ -64,6 +64,16 @@ CL-USER> (funcall (/split-comma (chain #'reads #'add1 #'$print)) "41,42,43")
 ;=>44
 (42 43 44)
 |#
+#|
+CL-USER> (with-input-from-string (in (format nil "1,2~%3,4~%42"))
+           (funcall (chain #'/line #'/split-comma #'reads #'add1 #'$print) in))
+2
+3
+4
+5
+43
+((2 3) (4 5) (43))
+|#
 (defun /split-comma (chained-op)
   (lambda (string)
     (loop :named /split
