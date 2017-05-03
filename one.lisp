@@ -58,14 +58,18 @@ CL-USER> (with-input-from-string (in (format nil "42~%43~%44"))
 
 ;;; I want to bring split-sequence into *one* in future, but now it's experiment...
 (defun /split-comma (chained-op)
+  (declare (ignore chained-op))
   (lambda (string)
     (loop :named /split
-       :for left := 0 :then (position #\, string :start right)
+       :for delim-pos := (position #\, string :start right)
+       :with len := (length string)
        :with right := 0
        :with result := nil
-       :until (<= right (length string))
-       :if (if (null left)
-               (return-from /split (nreverse result))
+       :while (< right len)
+       :do (if (null delim-pos)
                (progn
-                 (setf right (1+ left)
-                       result (cons (subseq string left right) nil)))))))
+                 (push (subseq string right) result)
+                 (return-from /split (nreverse result)))
+               (progn
+                 (push (subseq string right delim-pos) result)
+                 (setf right (1+ delim-pos)))))))
