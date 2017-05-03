@@ -57,19 +57,24 @@ CL-USER> (with-input-from-string (in (format nil "42~%43~%44"))
        :collect (funcall chained-op line)))) ;; bad performance in future
 
 ;;; I want to bring split-sequence into *one* in future, but now it's experiment...
+#|
+CL-USER> (funcall (/split-comma (chain #'reads #'add1 #'$print)) "41,42,43")
+;=>42
+;=>43
+;=>44
+(42 43 44)
+|#
 (defun /split-comma (chained-op)
-  (declare (ignore chained-op))
   (lambda (string)
     (loop :named /split
        :for delim-pos := (position #\, string :start right)
        :with len := (length string)
        :with right := 0
-       :with result := nil
        :while (< right len)
-       :do (if (null delim-pos)
-               (progn
-                 (push (subseq string right) result)
-                 (return-from /split (nreverse result)))
-               (progn
-                 (push (subseq string right delim-pos) result)
-                 (setf right (1+ delim-pos)))))))
+       :collect (if (null delim-pos)
+                    (prog1
+                      (funcall chained-op (subseq string right))
+                      (setf right len))
+                    (prog1
+                      (funcall chained-op (subseq string right delim-pos))
+                      (setf right (1+ delim-pos)))))))
