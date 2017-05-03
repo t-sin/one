@@ -88,3 +88,11 @@ CL-USER> (with-input-from-string (in (format nil "1,2~%3,4~%42"))
                     (prog1
                       (funcall chained-op (subseq string right delim-pos))
                       (setf right (1+ delim-pos)))))))
+
+;;; hmm?
+(defun >oddp (chained-op)
+  (lambda (numbers)
+    (loop
+       :for n :in numbers
+       :when (oddp n)
+       :collect (funcall chained-op n))))
