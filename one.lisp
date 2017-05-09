@@ -89,7 +89,11 @@ CL-USER> (with-input-from-string (in (format nil "1,2~%3,4~%42"))
                       (funcall chained-op (subseq string right delim-pos))
                       (setf right (1+ delim-pos)))))))
 
-;;; hmm?
+#|
+CL-USER> (funcall (chain #'>oddp) (funcall (chain #'/split-comma #'reads) "1,2,3,4,5"))
+(1 3 5)
+it has performance issue. stream-like lazy evaluating?
+|#
 (defun >oddp (chained-op)
   (lambda (numbers)
     (loop
