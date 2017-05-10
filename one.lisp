@@ -100,3 +100,14 @@ it has performance issue. stream-like lazy evaluating?
        :for n :in numbers
        :when (oddp n)
        :collect (funcall chained-op n))))
+
+
+;;;???
+(defun make-object-stream (chained-op)
+  (let ((buffer))
+    (labels ((object-pushed ()
+               (let ((obj buffer))
+                 (setf buffer nil)
+                 (funcall chained-op obj)))
+             (push-object (obj) (setf buffer obj)))
+      #'push-object)))
