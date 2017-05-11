@@ -102,12 +102,22 @@ it has performance issue. stream-like lazy evaluating?
        :collect (funcall chained-op n))))
 
 
-;;;???
-(defun make-object-stream (chained-op)
-  (let ((buffer))
-    (labels ((object-pushed ()
-               (let ((obj buffer))
-                 (setf buffer nil)
-                 (funcall chained-op obj)))
-             (push-object (obj) (setf buffer obj)))
-      #'push-object)))
+;;; ???
+(defun make-object-stream ()
+  (let ((stream)
+        (head))
+    (labels ((push-object (obj)
+               (when (null head)
+                 (setf head obj))
+               (setf stream `(,@stream ,obj))
+               head)
+             (pop-object ()
+               (if stream
+                   (prog1 (values head nil)
+                       (setf head (cadr stream)
+                             stream (cdr stream)))
+                   (values nil t)))
+             (clear-stream ()
+               (setf head nil
+                     stream nil)))
+      (values #'push-object #'pop-object #'clear-stream))))
