@@ -5,38 +5,38 @@
 (in-package :one)
 
 #|
-CL-USER> (funcall (chain #'id #'$print) 3)
+CL-USER> (funcall (transform #'id #'$print) 3)
 ;=> 3
 3
 |#
-(defun chain (&rest chain-operators)
-  "Chain operators serially. Operators specified must be defined with `define-chain-op`."
+(defun transform (&rest transform-operators)
+  "Transform operators serially. Operators specified must be defined with `define-transform-op`."
   (loop
-     :for (op . rest) :on (reverse chain-operators)
-     :for chained-op := (funcall op #'identity) :then (funcall op chained-op)
-     :finally (return-from chain chained-op)))
+     :for (op . rest) :on (reverse transform-operators)
+     :for transformed-op := (funcall op #'identity) :then (funcall op transformed-op)
+     :finally (return-from transform transformed-op)))
 
-(defmacro define-chain-op (fn-name (input-var) &body body)
-  "Define chain-operator. Chain-operators is a function that returns single result.
-Or chain-operators is a function that is a transform."
-  (let ((chained-op (gensym)))
-    `(defun ,fn-name (,chained-op)
+(defmacro define-transform-op (fn-name (input-var) &body body)
+  "Define transform-operator. Transform-operators is a function that returns single result.
+Or transform-operators is a function that is a transform."
+  (let ((transformed-op (gensym)))
+    `(defun ,fn-name (,transformed-op)
        (lambda (,input-var)
-         (funcall ,chained-op (progn ,@body))))))
+         (funcall ,transformed-op (progn ,@body))))))
 
-;;; chain-operators
+;;; transform-operators
 ;;; they are constructive operators, not core.
 ;;; they will be moved when finished experimental
-(define-chain-op id (obj)
+(define-transform-op id (obj)
   obj)
 
-(define-chain-op add1 (num)
+(define-transform-op add1 (num)
   (1+ num))
 
-(define-chain-op reads (str)
+(define-transform-op reads (str)
   (read-from-string str))
 
-(define-chain-op $print (obj)
+(define-transform-op $print (obj)
   (print obj))
 
 ;;; add-n: parametric chain operator
@@ -46,19 +46,19 @@ Or chain-operators is a function that is a transform."
 ;;; cannot define with define-op
 #|
 CL-USER> (with-input-from-string (in (format nil "42~%43~%44"))
-           (chain in #'/line #'reads #'add1))
+           (transform in #'/line #'reads #'add1))
 (43 44 45)
 |#
-(defun /line (chained-op)
+(defun /line (transformed-op)
   (lambda (stream)
     (loop
        :for line := (read-line stream nil nil)
        :while line
-       :collect (funcall chained-op line)))) ;; bad performance in future
+       :collect (funcall transformed-op line)))) ;; bad performance in future
 
 ;;; I want to bring split-sequence into *one* in future, but now it's experiment...
 #|
-CL-USER> (funcall (/split-comma (chain #'reads #'add1 #'$print)) "41,42,43")
+CL-USER> (funcall (/split-comma (transform #'reads #'add1 #'$print)) "41,42,43")
 ;=>42
 ;=>43
 ;=>44
@@ -66,7 +66,7 @@ CL-USER> (funcall (/split-comma (chain #'reads #'add1 #'$print)) "41,42,43")
 |#
 #|
 CL-USER> (with-input-from-string (in (format nil "1,2~%3,4~%42"))
-           (funcall (chain #'/line #'/split-comma #'reads #'add1 #'$print) in))
+           (funcall (transform #'/line #'/split-comma #'reads #'add1 #'$print) in))
 2
 3
 4
@@ -74,7 +74,7 @@ CL-USER> (with-input-from-string (in (format nil "1,2~%3,4~%42"))
 43
 ((2 3) (4 5) (43))
 |#
-(defun /split-comma (chained-op)
+(defun /split-comma (transformed-op)
   (lambda (string)
     (loop :named /split
        :for delim-pos := (position #\, string :start right)
@@ -83,20 +83,20 @@ CL-USER> (with-input-from-string (in (format nil "1,2~%3,4~%42"))
        :while (< right len)
        :collect (if (null delim-pos)
                     (prog1
-                      (funcall chained-op (subseq string right))
+                      (funcall transformed-op (subseq string right))
                       (setf right len))
                     (prog1
-                      (funcall chained-op (subseq string right delim-pos))
+                      (funcall transformed-op (subseq string right delim-pos))
                       (setf right (1+ delim-pos)))))))
 
 
 #|
-CL-USER> (funcall (chain #'>oddp) (funcall (chain #'/split-comma #'reads) "1,2,3,4,5"))
+CL-USER> (funcall (transform #'>oddp) (funcall (transform #'/split-comma #'reads) "1,2,3,4,5"))
 (1 3 5)
 it has performance issue. stream-like lazy evaluating?
 |#
-(defun >oddp (chained-op push-fn)
-  (declare (ignore chained-op))
+(defun >oddp (transformed-op push-fn)
+  (declare (ignore transformed-op))
   (lambda (numbers)
     (loop
        :for n :in numbers
@@ -121,3 +121,5 @@ it has performance issue. stream-like lazy evaluating?
                (setf head nil
                      stream nil)))
       (values #'push-object #'pop-object #'clear-stream))))
+
+(defun collect ())
