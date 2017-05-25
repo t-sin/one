@@ -90,19 +90,6 @@ CL-USER> (with-input-from-string (in (format nil "1,2~%3,4~%42"))
                       (setf right (1+ delim-pos)))))))
 
 
-#|
-CL-USER> (funcall (transform #'>oddp) (funcall (transform #'/split-comma #'reads) "1,2,3,4,5"))
-(1 3 5)
-it has performance issue. stream-like lazy evaluating?
-|#
-(defun >oddp (transformed-op push-fn)
-  (declare (ignore transformed-op))
-  (lambda (numbers)
-    (loop
-       :for n :in numbers
-       :when (oddp n)
-       :do (funcall push-fn n))))
-
 (defun make-object-stream ()
   (let ((stream)
         (head))
@@ -122,4 +109,21 @@ it has performance issue. stream-like lazy evaluating?
                      stream nil)))
       (values #'push-object #'pop-object #'clear-stream))))
 
-(defun collect ())
+#|
+CL-USER> (multiple-value-bind (pushobj popobj h)
+             (make-object-stream)
+           (funcall (funcall #'>oddp pushobj) (funcall (transform #'/split-comma #'reads) "1,2,3,4,5"))
+           (loop
+              :for (v nil-p) := (multiple-value-list (funcall popobj))
+              :until nil-p
+              :collect v))
+(1 3 5)
+|#
+(defun >oddp (push-fn)
+  (declare (ignore transformed-op))
+  (lambda (numbers)
+    (loop
+       :for n :in numbers
+       :when (oddp n)
+       :do (funcall push-fn n))))
+
