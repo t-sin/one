@@ -120,7 +120,6 @@ CL-USER> (multiple-value-bind (pushobj popobj h)
 (1 3 5)
 |#
 (defun >oddp (push-fn)
-  (declare (ignore transformed-op))
   (lambda (numbers)
     (loop
        :for n :in numbers
