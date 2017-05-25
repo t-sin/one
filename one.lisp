@@ -109,6 +109,9 @@ CL-USER> (with-input-from-string (in (format nil "1,2~%3,4~%42"))
                      stream nil)))
       (values #'push-object #'pop-object #'clear-stream))))
 
+(defmacro with-object-pipe ()
+  nil)
+
 #|
 CL-USER> (multiple-value-bind (pushobj popobj h)
              (make-object-stream)
