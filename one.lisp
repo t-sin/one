@@ -92,6 +92,12 @@ CL-USER> (with-input-from-string (in (format nil "1,2~%3,4~%42"))
 
 
 (defun make-object-stream ()
+  "pipe has these operations:
+- push
+    - push event handling?
+- pop
+- close
+"
   (let ((stream)
         (head))
     (labels ((push-object (obj)
@@ -143,7 +149,7 @@ CL-USER> (multiple-value-bind (pushobj popobj h)
 (one:for "1,2,3,4,5" (<split #\,) read (+ 1) (>remove-if #'oddp) >+)
 => (let* ((input "1,2,3,4,5")
           (pipe1 (make-pipe-from-sequense (split-sequence #\, input)))
-          (pipe2 (transform-pipe pipe1 (lambda (x) (+ 1 (read x)))))
+          (pipe2 (transform-pipe pipe1 (lambda (x) (+ 1 (lambda (x) (read x))))))
           (pipe3 (make-pipe pipe2 (remove-if #'oddp {})))
           (pipe4 (make-pipe pipe3 (+ @{}))))
       (dump-pipe pipe4))
