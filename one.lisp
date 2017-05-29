@@ -91,30 +91,37 @@ CL-USER> (with-input-from-string (in (format nil "1,2~%3,4~%42"))
                       (setf right (1+ delim-pos)))))))
 
 
-(defun make-object-stream ()
-  "pipe has these operations:
-- push
-    - push event handling?
-- pop
-- close
-"
-  (let ((stream)
-        (head))
-    (labels ((push-object (obj)
-               (when (null head)
-                 (setf head obj))
-               (setf stream `(,@stream ,obj))
-               head)
-             (pop-object ()
-               (if stream
-                   (prog1 (values head nil)
-                       (setf head (cadr stream)
-                             stream (cdr stream)))
-                   (values nil t)))
-             (clear-stream ()
-               (setf head nil
-                     stream nil)))
-      (values #'push-object #'pop-object #'clear-stream))))
+(defstruct pipe
+  push pop close set-callback)
+
+(defun make-pipe ()
+  (let ((buffer)
+        (head)
+        (callback-fn))
+    (flet ((push-obj (obj)
+             (when (null head)
+               (setf head obj))
+             (setf buffer `(,@buffer ,obj))
+             (when callback-fn
+               (funcall callback-fn head))
+             head)
+           (pop-obj ()
+             (if buffer
+                 (let ((previous-head head))
+                   (setf head (cadr buffer)
+                         buffer (cdr buffer))
+                   (values previous-head t))
+                 (values nil nil)))
+           (close-pipe ()
+             (setf head :closed
+                   buffer :closed))
+           (set-callback (fn)
+             (when (functionp fn)
+               (setf callback-fn fn))))
+      (make-pipe :push #'push-obj
+                 :pop #'pop-obj
+                 :close #'close-pipe
+                 :set-callback #'set-callback))))
 
 (defmacro with-object-pipe ()
   nil)
