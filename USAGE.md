@@ -69,10 +69,17 @@ CL-USER> (for '(0 1 2 3) 1+ 1+)
 Prefix `>` means `filtering` or `folding`. Functions which has the prefix fold input into lesser elements.
 
 ```lisp
-CL-USRE> (for '(0 1 2 3) >oddp)
+CL-USER> (for '(0 1 2 3) >oddp)
 ;=> (loop
 ;     :for e :in '(0 1 2 3)
 ;     :when (oddp e)
 ;     :collect e)
 (1 3)
+```
+
+## Combined operation
+
+```lisp
+CL-USER> (for "1,2,3,4,5" (/split #\,) read >oddp >+)
+8  ;; sum of odd numbers
 ```
