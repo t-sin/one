@@ -80,6 +80,6 @@ CL-USER> (for '(0 1 2 3) >oddp)
 ## Combined operation
 
 ```lisp
-CL-USER> (for "1,2,3,4,5" (/split #\,) read >oddp >+)
-8  ;; sum of odd numbers
+CL-USER> (for "1,2,3,4,5" (/split #\,) read 1+ (>remove-if #'oddp) >+)
+18
 ```
