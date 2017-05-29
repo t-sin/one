@@ -6,17 +6,6 @@
 
 
 #|
-(one:for "1,2,3,4,5" (<split #\,) read (+ 1) (>remove-if #'oddp) >+)
-=> (let* ((input "1,2,3,4,5")
-          (pipe1 (make-pipe-from-sequense (split-sequence #\, input)))
-          (pipe2 (transform-pipe pipe1 (lambda (x) (+ 1 (read x)))))
-          (pipe3 (make-pipe pipe2 (remove-if #'oddp {})))
-          (pipe4 (make-pipe pipe3 (+ @{}))))
-      (dump-pipe pipe4))
-; => 8
-|#
-
-#|
 CL-USER> (funcall (transform #'id #'$print) 3)
 ;=> 3
 3
@@ -140,4 +129,24 @@ CL-USER> (multiple-value-bind (pushobj popobj h)
        :for n :in numbers
        :when (oddp n)
        :do (funcall push-fn n))))
+
+
+
+
+
+#|
+- can use standard Common Lisp operators/functions
+- can use other library functions (e.g. split-sequence)
+- value-to-value operations are lazy evaluated
+    - distinguish a kind of *one operators* by '<', '>'
+
+(one:for "1,2,3,4,5" (<split #\,) read (+ 1) (>remove-if #'oddp) >+)
+=> (let* ((input "1,2,3,4,5")
+          (pipe1 (make-pipe-from-sequense (split-sequence #\, input)))
+          (pipe2 (transform-pipe pipe1 (lambda (x) (+ 1 (read x)))))
+          (pipe3 (make-pipe pipe2 (remove-if #'oddp {})))
+          (pipe4 (make-pipe pipe3 (+ @{}))))
+      (dump-pipe pipe4))
+; => 8
+|#
 
