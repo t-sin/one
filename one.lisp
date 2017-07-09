@@ -1,6 +1,5 @@
 (in-package :cl-user)
 (defpackage one
-  (:nicknames :o)
   (:use :cl))
 (in-package :one)
 
