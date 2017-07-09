@@ -178,3 +178,22 @@ transforms:
 |#
 
 
+;;;; one: elementary functions
+
+(defstruct operation type op-fn)
+
+(defun call-next (op)
+  )
+
+(defun for1 (input op)
+  )
+
+(defmacro for (input op-list)
+  )
+
+;;;; input processer
+(define-op per-line (pathname)
+  )
+
+(define-op per-element (sequence)
+  )
