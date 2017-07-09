@@ -4,6 +4,7 @@
   (:use :cl))
 (in-package :one)
 
+;;;; this is a rough sketch for `one`
 
 #|
 CL-USER> (funcall (transform #'id #'$print) 3)
