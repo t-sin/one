@@ -165,7 +165,7 @@ CL-USER> (multiple-value-bind (pushobj popobj h)
 |#
 
 #|
-(one:proc <input> <transform...>)
+(one:for <input> <transform...>)
 transforms:
 - symbol ... 1 args function
 - list ... muiti-args function (but passed one args; input)
@@ -174,6 +174,8 @@ transforms:
 - readers ... function has special behavior; result stores in object pipe
   - $<(fun args... _) ... multi time firing of successor
   - $>(fun args... _) ... outputs maybe fewer than input
+
+(one:for1 <input> <transform>)
 |#
 
 
