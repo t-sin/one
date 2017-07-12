@@ -77,6 +77,12 @@ CL-USER> (for '(0 1 2 3) >oddp)
 (1 3)
 ```
 
+
+```lisp
+CL-USER> (for "3,2,1,5,4" (/split #\,) (sort _ #'<))
+(1 2 3 4 5)
+```
+
 ## Combined operation
 
 ```lisp
