@@ -167,7 +167,7 @@ CL-USER> (multiple-value-bind (pushobj popobj h)
 (one:for <input> <transform...>)
 transforms:
 - symbol ... 1 args function
-- list ... muiti-args function (but passed one args; input)
+- list ... muiti-args function (but passed one args: input)
   - simple list ... args placed at last
   - list has _ symbol ... args placed at position of _
 - readers ... function has special behavior; result stores in object pipe
@@ -212,21 +212,8 @@ transforms:
               :for e :across sequence
               :do (funcall op e))))))
 
+;;; processing
 
-(defstruct operation type op-fn)
 
-(defun call-next (op)
-  )
-
-(defun for1 (input op)
-  )
-
-(defmacro for (input op-list)
-  )
-
-;;;; input processer
-(define-op per-line (pathname)
-  )
-
-(define-op per-element (sequence)
-  )
+;;; DSL
+(defmacro for (input op-list))
