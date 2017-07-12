@@ -52,6 +52,16 @@ $ seq 10 | ros -s one -e '(o:for - /line print)'
 ...
 ```
 
+#### Input from stream
+
+```lisp
+CL-USER> (with-input-from-string (- "1 2 3")
+           (one:for - read print))
+# => (loop
+       :for e := (read -)
+       :do (print e))
+```
+
 ## Chaining
 
 ### Basic chaining
