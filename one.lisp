@@ -180,6 +180,39 @@ transforms:
 
 ;;;; one: elementary functions
 
+;;; input
+(defun read% (stream)
+  (read stream nil :eof))
+
+(defun read-char% (stream)
+  (read-char stream nil :eof))
+
+(defun read-line% (stream)
+  (read-line stream nil :eof))
+
+(defun read-byte% (stream)
+  (read-byte stream nil :eof))
+
+(defun scan-on (stream read-fn)
+  (lambda (op)
+    (loop
+       :for e := (funcall read-fn stream)
+       :until (eq e :eof)
+       :do (funcall op e))))
+
+(defun scan-on (sequence)
+  (cond ((listp sequence)
+         (lambda (op)
+           (loop
+              :for e :in sequence
+              :do (funcall op e))))
+        ((vectorp sequence)
+         (lambda (op)
+           (loop
+              :for e :across sequence
+              :do (funcall op e))))))
+
+
 (defstruct operation type op-fn)
 
 (defun call-next (op)
