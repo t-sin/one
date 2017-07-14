@@ -213,7 +213,20 @@ transforms:
               :do (funcall op e))))))
 
 ;;; processing
+;; ex)
+;; - filter
+(defun collect (predicate next-op)
+  (lambda (input)
+    (when (funcall predicate input)
+      (funcall next-op input))))
 
+;; ex)
+;; - split
+(defun ?? ())
+
+;; ex)
+;; - sort
+(defun gether (operator ??))
 
 ;;; DSL
 (defmacro for (input op-list))
