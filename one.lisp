@@ -200,7 +200,7 @@ transforms:
        :until (eq e :eof)
        :do (funcall op e))))
 
-(defun scan-on (sequence)
+(defun scan-on (sequence next-fn)
   (cond ((listp sequence)
          (lambda (op)
            (loop
