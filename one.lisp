@@ -193,14 +193,15 @@ transforms:
 (defun read-byte% (stream)
   (read-byte stream nil :eof))
 
-(defun scan-on (stream read-fn)
+(defgeneric scan (input next-fn))
+(defmethod scan ((stream stream) (read-fn function))
   (lambda (op)
     (loop
        :for e := (funcall read-fn stream)
        :until (eq e :eof)
        :do (funcall op e))))
 
-(defun scan-on (sequence next-fn)
+(defmethod scan ((sequence sequence) (next-fn function))
   (cond ((listp sequence)
          (lambda (op)
            (loop
