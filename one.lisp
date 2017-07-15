@@ -216,7 +216,11 @@ transforms:
 ;;; processing
 ;; ex)
 ;; - filter
-(defun collect (predicate next-op)
+;;
+;; reader macro:
+;;   $?(fn args...)
+;;   $?fn
+(defun call-if (predicate next-op)
   (lambda (input)
     (when (funcall predicate input)
       (funcall next-op input))))
