@@ -227,7 +227,9 @@ transforms:
 
 ;; ex)
 ;; - split
-(defun ?? ())
+(defun map-call (next-op)
+  (lambda (input)
+    (funcall (scan input #'identity) next-op)))
 
 ;; ex)
 ;; - sort
