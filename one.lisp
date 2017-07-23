@@ -235,7 +235,13 @@ transforms:
 
 ;; ex)
 ;; - sort
-(defun gether (operator ??))
+;; - as list
+(defun gether (gether-op)
+  (let (buffer)
+    (values (lambda (input) (push input buffer))
+            (lambda (op)
+              (funcall op (funcall gether-op buffer))
+              (setf buffer nil)))))
 
 ;;; DSL
 (defmacro for (input op-list))
