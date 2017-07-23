@@ -108,4 +108,7 @@ transforms:
               (setf buffer nil)))))
 
 ;;; DSL
+;; ex)
+;; (for #P"hoge.log" < read-line ? (search "fuga" _) > (sort _ <) . print)
+;; == $ cat hoge.log | grep "fuga" | sort
 (defmacro for (input op-list))
