@@ -59,6 +59,12 @@ transforms:
        :until (eq e :eof)
        :do (funcall op e))))
 
+(defmethod scan ((pathname pathname) (read-fn function))
+  (lambda (op)
+    (with-open-file (in pathname
+                        :direction :input)
+      (scan in read-fn))))
+
 (defmethod scan ((sequence sequence) (next-fn function))
   (cond ((listp sequence)
          (lambda (op)
