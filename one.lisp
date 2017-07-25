@@ -1,6 +1,15 @@
 (in-package :cl-user)
 (defpackage one
-  (:use :cl))
+  (:use :cl)
+  (:export :read*
+           :read-char*
+           :read-line*
+           :read-byte*
+
+           :$scan
+           :$call-if
+           :$map
+           :$gather))
 (in-package :one)
 
 ;;;; this is a rough sketch for `one`
