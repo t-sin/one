@@ -109,10 +109,11 @@ transforms:
 ;; - as list
 (defun $gether (gether-op)
   (let (buffer)
-    (values (lambda (input) (push input buffer))
-            (lambda (op)
-              (funcall op (funcall gether-op buffer))
-              (setf buffer nil)))))
+    (flet ((slurp (input) (push input buffer))
+           (barf (op)
+             (funcall op (funcall gether-op buffer))
+             (setf buffer nil)))
+      (values #'slurp #'barf))))
 
 ;;; DSL
 ;; ex)
