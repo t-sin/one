@@ -115,6 +115,28 @@ transforms:
              (setf buffer nil)))
       (values #'slurp #'barf))))
 
+
+(defun place-holder-p (e)
+  (and (symbolp e) (string= (symbol-name e) "_")))
+
+(defun count-place-holder (code)
+  (count '_ code
+         :key #'place-holder-p
+         :test #'string=))
+
+(defun replace-place-holder (var code)
+  (loop
+     :for e :in code
+     :collect (if (place-holder-p e)
+                  var
+                  e)))
+
+(defmacro $curry (code)
+  (let ((input (gensym)))
+    `(lambda (,input)
+       ,(replace-place-holder input code))))
+
+
 ;;; DSL
 ;; ex)
 ;; (for #P"hoge.log" < read-line ? (search "fuga" _) > (sort _ <) . print)
