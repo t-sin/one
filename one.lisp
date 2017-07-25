@@ -91,11 +91,9 @@ transforms:
 
 ;; ex)
 ;; - split
-;; difference from mapcan is, map-call can take vector. or this is not required.
-;; but I think mapcar(can) is sufficient to `one`...
-(defun map-call (next-op)
-  (lambda (input)
-    (funcall (scan input #'identity) next-op)))
+(defun $map (next-op)
+  (lambda (sequence)
+    (mapcar next-op (coerce sequence 'list))))
 
 ;; ex)
 ;; - sort
