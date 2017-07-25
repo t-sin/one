@@ -51,21 +51,21 @@ transforms:
 (defun read-byte* (stream)
   (read-byte stream nil :eof))
 
-(defgeneric scan (input next-fn))
-(defmethod scan ((stream stream) (read-fn function))
+(defgeneric $scan (input next-fn))
+(defmethod $scan ((stream stream) (read-fn function))
   (lambda (op)
     (loop
        :for e := (funcall read-fn stream)
        :until (eq e :eof)
        :do (funcall op e))))
 
-(defmethod scan ((pathname pathname) (read-fn function))
+(defmethod $scan ((pathname pathname) (read-fn function))
   (lambda (op)
     (with-open-file (in pathname
                         :direction :input)
       (scan in read-fn))))
 
-(defmethod scan ((sequence sequence) (next-fn function))
+(defmethod $scan ((sequence sequence) (next-fn function))
   (cond ((listp sequence)
          (lambda (op)
            (loop
@@ -84,7 +84,7 @@ transforms:
 ;; reader macro:
 ;;   $?(fn args...)
 ;;   $?fn
-(defun call-if (predicate next-op)
+(defun $call-if (predicate next-op)
   (lambda (input)
     (when (funcall predicate input)
       (funcall next-op input))))
@@ -100,7 +100,7 @@ transforms:
 ;; ex)
 ;; - sort
 ;; - as list
-(defun gether (gether-op)
+(defun $gether (gether-op)
   (let (buffer)
     (values (lambda (input) (push input buffer))
             (lambda (op)
