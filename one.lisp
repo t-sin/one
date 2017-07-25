@@ -39,16 +39,16 @@ transforms:
 ;;;; one: elementary functions
 
 ;;; input
-(defun read% (stream)
+(defun read* (stream)
   (read stream nil :eof))
 
-(defun read-char% (stream)
+(defun read-char* (stream)
   (read-char stream nil :eof))
 
-(defun read-line% (stream)
+(defun read-line* (stream)
   (read-line stream nil :eof))
 
-(defun read-byte% (stream)
+(defun read-byte* (stream)
   (read-byte stream nil :eof))
 
 (defgeneric scan (input next-fn))
