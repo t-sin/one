@@ -9,7 +9,7 @@
            :$scan
            :$call-if
            :$map
-           :$gather))
+           :$gether))
 (in-package :one)
 
 ;;;; this is a rough sketch for `one`
