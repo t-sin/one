@@ -136,12 +136,11 @@ transforms:
     `(lambda (,input)
        ,(replace-place-holder input code))))
 
-;;; it does not work!
-(defun $compose (&rest operators)
-  (loop :named compose-loop
-     :for op :in (reverse operators)
-     :for composed := (funcall op #'identity) :then (funcall op composed)
-     :finally (return-from compose-loop composed)))
+(defun $compose (operators)
+  (let ((op (car operators)))
+    (if (null op)
+        #'identity
+        (lambda (input) (funcall op (funcall ($compose (cdr operators)) input))))))
 
 ;;; DSL
 ;; ex)
