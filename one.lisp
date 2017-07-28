@@ -145,7 +145,27 @@ transforms:
         (lambda (input) (funcall op (funcall ($compose (cdr operators)) input))))))
 
 ;;; DSL
+
+(defun associate-left (body)
+  (labels ((symbol-equal-p (a b)
+             (and (symbolp a)
+                  (string= (symbol-name a) (symbol-name b))))
+           (connective-p (e)
+             (member e '(< > $ ?)
+                     :test #'symbol-equal-p)))
+    (let ((pos (position-if #'connective-p body)))
+      (print pos)
+      (print body)
+      (if (null pos)
+          body
+          (if (= pos 1)
+              (let ((input (nth 0 body))
+                    (connective (nth pos body))
+                    (rest (cddr body)))
+                (list input `(,connective ,@(associate-left rest))))
+              (error "invalid code: "))))))
+
 ;; ex)
-;; (for #P"hoge.log" < read-line ? (search "fuga" _) > (sort _ <) . print)
+;; (for #P"hoge.log" < read-line ? (search "fuga" _) > (sort _ <) $ print)
 ;; == $ cat hoge.log | grep "fuga" | sort
-(defmacro for (input op-list))
+(defmacro for (&body body))
