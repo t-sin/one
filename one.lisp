@@ -154,8 +154,6 @@ transforms:
              (member e '(< > $ ?)
                      :test #'symbol-equal-p)))
     (let ((pos (position-if #'connective-p body)))
-      (print pos)
-      (print body)
       (if (null pos)
           body
           (if (= pos 1)
