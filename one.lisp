@@ -146,7 +146,7 @@ transforms:
 
 ;;; DSL
 
-(defun associate-left (body &optional tree)
+(defun parse (body &optional tree)
   (flet ((connective-p (e)
            (member e '(< > $ ?)
                    :test (lambda (a b)
