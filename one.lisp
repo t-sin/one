@@ -173,6 +173,16 @@ transforms:
                (associate-left rest (list connective operandl operandr))))
           (t (error (format nil "invalid syntax: ~s" body))))))
 
+(defun build (stree &optional op)
+  (if (null stree)
+      op
+      (destructuring-bind (connective opl opr)
+          stree
+        (ecase connective
+          (< :scan)
+          (> :gather)
+          ($ :compose)
+          (? :call-if)))))
 
 ;; ex)
 ;; (for #P"hoge.log" < read-line ? (search "fuga" _) > (sort _ <) $ print)
