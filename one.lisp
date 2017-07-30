@@ -176,12 +176,11 @@ transforms:
 (defun build (stree &optional op)
   (if (null stree)
       op
-      (destructuring-bind (connective opl opr)
+      (destructuring-bind (connective input-op next-op)
           stree
         (ecase connective
           (< :scan)
           (> :gather)
-          ($ :compose)
           (? :call-if)))))
 
 ;; ex)
