@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/t-sin/one.svg?branch=master)](https://travis-ci.org/t-sin/one)
 [![Circle CI](https://circleci.com/gh/t-sin/one.svg?style=svg)](https://circleci.com/gh/t-sin/one)
 
-One provide framework for processing input like stream, pathname and sequence.
+One provides a framework for processing input like stream, pathname and sequence.
 
 
 > 「ワンか……。ワンといえば英語の１のことだよね。んー、そうだ！　イチ！　イチにしよう。国際的な名まえだ。いいだろう？」
