@@ -176,11 +176,15 @@ transforms:
 (defun build (stree &optional op)
   (if (null stree)
       op
-      (destructuring-bind (connective input-op next-op)
+      (destructuring-bind (connective input next-op)
           stree
+        (print next-op)
+        (when (listp next-op)
+          (print (macroexpand-1 `($curry ,next-op))))
         (ecase connective
-          (< :scan)
+          (< (values (lambda (input) (funcall ($scan input next-op) op) :scan)))
           (> :gather)
+          ($ (values (build input) :compose))
           (? :call-if)))))
 
 ;; ex)
