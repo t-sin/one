@@ -172,7 +172,7 @@ transforms:
              (parse rest (list connective input-op next-op))))
           (t (error (format nil "invalid syntax: ~s" body))))))
 
-(defun build (stree &optional op)
+(defun build (stree &optional (op #'identity))
   (if (null stree)
       op
       (destructuring-bind (connective input next-op)
@@ -180,9 +180,12 @@ transforms:
         (when (listp next-op)
           (setf next-op (simplified-lambda next-op)))
         (ecase connective
-          (< (values (lambda (input) (funcall ($scan input next-op) op) :scan)))
+          (< (let ((input-var (gensym)))
+               `(lambda (,input-var) (funcall ($scan ,input ,next-op) ,op))))
           (> :gather)
-          ($ (values (build input) :compose))
+          ($ (let ((input-var (gensym)))
+               `(lambda (,input-var)
+                  (funcall ,next-op (funcall ,(build input) ,input-var)))))
           (? :call-if)))))
 
 ;; ex)
