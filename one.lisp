@@ -10,7 +10,6 @@
            :$call-if
            :$map
            :$gether
-           :$curry
            :$compose))
 (in-package :one)
 
@@ -118,26 +117,6 @@ transforms:
       (values #'slurp #'barf))))
 
 
-(defun place-holder-p (e)
-  (and (symbolp e) (string= (symbol-name e) "_")))
-
-(defun count-place-holder (code)
-  (count '_ code
-         :key #'place-holder-p
-         :test #'string=))
-
-(defun replace-place-holder (var code)
-  (loop
-     :for e :in code
-     :collect (if (place-holder-p e)
-                  var
-                  e)))
-
-(defmacro $curry (code)
-  (let ((input (gensym)))
-    `(lambda (,input)
-       ,(replace-place-holder input code))))
-
 (defun $compose (operators)
   (let ((op (car operators)))
     (if (null op)
@@ -156,6 +135,26 @@ transforms:
      :collect (if (connective-p e)
                   (intern (symbol-name e) :one)
                   e)))
+
+(defun place-holder-p (e)
+  (and (symbolp e) (string= (symbol-name e) "_")))
+
+(defun count-place-holder (code)
+  (count '_ code
+         :key #'place-holder-p
+         :test #'string=))
+
+(defun replace-place-holder (var code)
+  (loop
+     :for e :in code
+     :collect (if (place-holder-p e)
+                  var
+                  e)))
+
+(defun simplified-lambda (code)
+  (let ((input (gensym)))
+    `(lambda (,input)
+       ,(replace-place-holder input code))))
 
 (defun parse (body &optional stree)
   (let ((fst (first body)))
@@ -178,9 +177,8 @@ transforms:
       op
       (destructuring-bind (connective input next-op)
           stree
-        (print next-op)
         (when (listp next-op)
-          (print (macroexpand-1 `($curry ,next-op))))
+          (setf next-op (simplified-lambda next-op)))
         (ecase connective
           (< (values (lambda (input) (funcall ($scan input next-op) op) :scan)))
           (> :gather)
