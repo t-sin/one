@@ -117,12 +117,6 @@ transforms:
       (values #'slurp #'barf))))
 
 
-(defun $compose (operators)
-  (let ((op (car operators)))
-    (if (null op)
-        #'identity
-        (lambda (input) (funcall op (funcall ($compose (cdr operators)) input))))))
-
 ;;; DSL
 (defun connective-p (e)
   (member e '(< > $ ?)
