@@ -159,13 +159,6 @@ transforms:
                                     (next-op (second body))
                                     (rest (cddr body)))
                                 (parse rest (list connective stree next-op))))
-          ((and (connective-p (second body))
-                (>= (length body) 3))
-           (let ((input-op (first body))
-                 (connective (second body))
-                 (next-op (third body))
-                 (rest (cdddr body)))
-             (parse rest (list connective input-op next-op))))
           (t (error (format nil "invalid syntax: ~s" body))))))
 
 (defun build (stree &optional (op #'identity))
