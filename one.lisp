@@ -175,20 +175,20 @@ transforms:
           (t (error (format nil "invalid syntax: ~s" body))))))
 
 (defun build (stree &optional (op #'identity))
-  (if (null stree)
-      op
-      (destructuring-bind (connective input next-op)
-          stree
-        (when (listp next-op)
-          (setf next-op (simplified-lambda next-op)))
-        (ecase connective
-          (< (let ((input-var (gensym)))
-               `(lambda (,input-var) (funcall ($scan ,input ,next-op) ,op))))
-          (> :gather)
-          ($ (let ((input-var (gensym)))
-               `(lambda (,input-var)
-                  (funcall ,next-op (funcall ,(build input) ,input-var)))))
-          (? :call-if)))))
+  (cond ((not (listp stree)) stree)
+        ((null stree) op)
+        (t (destructuring-bind (connective input next-op)
+               stree
+             (when (listp next-op)
+               (setf next-op (simplified-lambda next-op)))
+             (ecase connective
+               (< (let ((input-var (gensym)))
+                    `(lambda (,input-var) (funcall ($scan ,input ,next-op) ,op))))
+               (> :gather)
+               ($ (let ((input-var (gensym)))
+                    `(lambda (,input-var)
+                       (funcall ,next-op (funcall ,(build input) ,input-var)))))
+               (? :call-if))))))
 
 ;; ex)
 ;; (for #P"hoge.log" < read-line ? (search "fuga" _) > (sort _ <) $ print)
