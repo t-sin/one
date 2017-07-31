@@ -162,9 +162,8 @@ transforms:
           (t (error (format nil "invalid syntax: ~s" body))))))
 
 (defun build (stree &optional (op #'identity))
-  (cond ((not (listp stree)) stree)
-        ((null stree) op)
         (t (destructuring-bind (connective input next-op)
+  (cond ((null stree) #'identity)
                stree
              (setf next-op (simplified-lambda next-op))
              (ecase connective
