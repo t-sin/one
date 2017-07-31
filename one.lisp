@@ -179,15 +179,12 @@ transforms:
         ((null stree) op)
         (t (destructuring-bind (connective input next-op)
                stree
-             (when (listp next-op)
-               (setf next-op (simplified-lambda next-op)))
+             (setf next-op (simplified-lambda next-op))
              (ecase connective
                (< (let ((input-var (gensym)))
                     `(lambda (,input-var) (funcall ($scan ,input ,next-op) ,op))))
                (> :gather)
-               ($ (let ((input-var (gensym)))
-                    `(lambda (,input-var)
-                       (funcall ,next-op (funcall ,(build input) ,input-var)))))
+               ($ `(funcall ,next-op ,(build input)))
                (? :call-if))))))
 
 ;; ex)
