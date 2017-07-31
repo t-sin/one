@@ -162,15 +162,16 @@ transforms:
           (t (error (format nil "invalid syntax: ~s" body))))))
 
 (defun build (stree &optional (op #'identity))
-        (t (destructuring-bind (connective input next-op)
   (cond ((null stree) #'identity)
+        (t (destructuring-bind (connective optree next-op)
                stree
              (setf next-op (simplified-lambda next-op))
              (ecase connective
                (< (let ((input-var (gensym)))
                     `(lambda (,input-var) (funcall ($scan ,input ,next-op) ,op))))
                (> :gather)
-               ($ `(funcall ,next-op ,(build input)))
+               ($ (let ((in (gensym)))
+                    `(lambda (,in) (funcall ,next-op (funcall ,(build optree) ,in)))))
                (? :call-if))))))
 
 ;; ex)
