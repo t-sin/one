@@ -161,7 +161,7 @@ transforms:
                                 (parse rest (list connective stree next-op))))
           (t (error (format nil "invalid syntax: ~s" body))))))
 
-(defun build (stree &optional (op #'identity))
+(defun build (stree)
   (cond ((null stree) #'identity)
         (t (destructuring-bind (connective optree next-op)
                stree
