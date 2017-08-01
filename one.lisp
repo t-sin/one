@@ -70,9 +70,10 @@ transforms:
        :do (funcall op e))))
 
 (defmethod $scan ((pathname pathname) (read-fn function))
-  (with-open-file (in pathname
+  (lambda (op)
+    (with-open-file (in pathname
                       :direction :input)
-    (funcall ($scan in read-fn))))
+      (funcall ($scan in read-fn) op))))
 
 (defmethod $scan ((sequence sequence) (next-fn function))
   (cond ((listp sequence)
