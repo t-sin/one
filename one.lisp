@@ -170,7 +170,8 @@ transforms:
                (> :gather)
                ($ (let ((in (gensym)))
                     (build optree `(lambda (,in) (funcall ,ops (funcall ,next-op ,in))))))
-               (? :call-if))))))
+               (? (let ((in (gensym)))
+                    (build optree `(lambda (,in) (funcall ($call-if ,next-op ,ops) ,in))))))))))
 
 ;; ex)
 ;; (for #P"hoge.log" < read-line ? (search "fuga" _) > (sort _ <) $ print)
