@@ -10,6 +10,12 @@ One provides a framework for processing input like stream, pathname and sequence
 > --- のび太, 『子犬イチの国 キズナ編』, 『ドラえもん』, 2010.10.22放映
 
 
+## Installation
+
+```
+$ ros install t-sin/one
+```
+
 ## Usage
 
 ### Basis
@@ -22,11 +28,18 @@ TBD
 
 ### Examples
 
-TBD
+- `cat file.txt`
 
-## Installation
+```sh
+$ ros -s one -e '(one:for #P"file.txt < one:read-line* $ print")' -q
+```
 
-TBD
+- `cat file.txt | grep hoge`
+
+```sh
+$ ros -s one -e '(one:for #P"file.txt < one:read-line* ? (search "hoge" _) $ print")' -q
+```
+
 
 ## Author
 
