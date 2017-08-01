@@ -157,17 +157,17 @@ transforms:
                                 (parse rest (list connective stree next-op))))
           (t (error (format nil "invalid syntax: ~s" body))))))
 
-(defun build (stree)
-  (cond ((null stree) #'identity)
+(defun build (stree &optional (ops #'identity))
+  (cond ((null stree) ops)
         (t (destructuring-bind (connective optree next-op)
                stree
              (setf next-op (simplified-lambda next-op))
              (ecase connective
                (< (let ((in (gensym)))
-                    `(lambda (,in) (funcall ($scan ,in ,next-op) ,(build optree)))))
+                    (build optree `(lambda (,in) (funcall ($scan ,in ,next-op) ,ops)))))
                (> :gather)
                ($ (let ((in (gensym)))
-                    `(lambda (,in) (funcall ,next-op (funcall ,(build optree) ,in)))))
+                    (build optree `(lambda (,in) (funcall ,ops (funcall ,next-op ,in))))))
                (? :call-if))))))
 
 ;; ex)
