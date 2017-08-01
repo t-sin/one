@@ -176,4 +176,5 @@ transforms:
 ;; ex)
 ;; (for #P"hoge.log" < read-line ? (search "fuga" _) > (sort _ <) $ print)
 ;; == $ cat hoge.log | grep "fuga" | sort
-(defmacro for (&body body))
+(defmacro for (input &body body)
+  `(funcall ,(build (parse (replace-connective body))) ,input))
