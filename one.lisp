@@ -6,11 +6,7 @@
            :read-line*
            :read-byte*
 
-           :$scan
-           :$call-if
-           :$map
-           :$gether
-           :$compose))
+           :for))
 (in-package :one)
 
 ;;;; this is a rough sketch for `one`
