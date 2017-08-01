@@ -139,7 +139,9 @@ transforms:
      :for e :in code
      :collect (if (place-holder-p e)
                   var
-                  e)))
+                  (if (listp e)
+                      (replace-place-holder var e)
+                      e))))
 
 (defun simplified-lambda (code)
   (if (listp code)
