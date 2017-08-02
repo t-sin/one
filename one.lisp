@@ -138,9 +138,7 @@
                (? (let ((in (gensym)))
                     (build optree `(lambda (,in) (funcall ($call-if ,next-op ,ops) ,in))))))))))
 
-;; ex)
-;; (for #P"hoge.log" < read-line ? (search "fuga" _) > (sort _ <) $ print)
-;; == $ cat hoge.log | grep "fuga" | sort
+
 (defmacro for (input &body body)
   (if (and (symbolp input) (string= (symbol-name input) "-"))
       `(funcall ,(build (parse (replace-connective body))) ,*standard-input*)
