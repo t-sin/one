@@ -5,6 +5,7 @@
            :read-char*
            :read-line*
            :read-byte*
+           :print*
 
            :for))
 (in-package :one)
@@ -22,6 +23,11 @@
 
 (defun read-byte* (stream)
   (read-byte stream nil :eof))
+
+(defun print* (input)
+  (format t "~a~%" input))
+
+;;; processing
 
 (defgeneric $scan (input next-fn))
 (defmethod $scan ((stream stream) (read-fn function))
@@ -48,8 +54,6 @@
            (loop
               :for e :across sequence
               :do (funcall op e))))))
-
-;;; processing
 
 (defun $call-if (predicate next-op)
   (lambda (input)
