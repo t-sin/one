@@ -31,13 +31,13 @@ TBD
 - `cat file.txt`
 
 ```sh
-$ ros -s one -e '(one:for #P"file.txt < one:read-line* $ print")' -q
+$ ros -s one -e '(one:for #P"file.txt" < one:read-line* $ print)' -q
 ```
 
 - `cat file.txt | grep hoge`
 
 ```sh
-$ ros -s one -e '(one:for #P"file.txt < one:read-line* ? (search "hoge" _) $ print")' -q
+$ ros -s one -e '(one:for #P"file.txt" < one:read-line* ? (search "hoge" _) $ print)' -q
 ```
 
 
