@@ -142,6 +142,6 @@
 ;; (for #P"hoge.log" < read-line ? (search "fuga" _) > (sort _ <) $ print)
 ;; == $ cat hoge.log | grep "fuga" | sort
 (defmacro for (input &body body)
-  (if (string= (symbol-name input) "-")
+  (if (and (symbolp input) (string= (symbol-name input) "-"))
       `(funcall ,(build (parse (replace-connective body))) ,*standard-input*)
       `(funcall ,(build (parse (replace-connective body))) ,input)))
