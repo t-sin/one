@@ -104,12 +104,11 @@ transforms:
 ;; ex)
 ;; - sort
 ;; - as list
-(defun $gether (gether-op)
+(defun $gather (gather-op)
   (let (buffer)
     (flet ((slurp (input) (push input buffer))
            (barf (op)
-             (funcall op (funcall gether-op buffer))
-             (setf buffer nil)))
+             (funcall op (funcall gather-op (nreverse buffer)))))
       (values #'slurp #'barf))))
 
 
