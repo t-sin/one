@@ -1,32 +1,18 @@
 (in-package :cl-user)
 (defpackage one
   (:use :cl)
+  (:import-from :one/io
+                :read*
+                :read-char*
+                :read-line*
+                :print*)
   (:export :read*
            :read-char*
            :read-line*
-           :read-byte*
            :print*
 
            :for))
 (in-package :one)
-
-
-;;; IO
-
-(defun read* (stream)
-  (read stream nil :eof))
-
-(defun read-char* (stream)
-  (read-char stream nil :eof))
-
-(defun read-line* (stream)
-  (read-line stream nil :eof))
-
-(defun read-byte* (stream)
-  (read-byte stream nil :eof))
-
-(defun print* (input)
-  (format t "~a~%" input))
 
 
 ;;; processing
