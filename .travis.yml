@@ -7,7 +7,7 @@ env:
     - PATH: $PATH:$HOME/.roswell/bin
     - COVERAGE_EXCLUDE: tests:roswell
   matrix:
-    - LISP=sbcl-bin
+    - LISP=sbcl-bin COVERALLS=true
     - LISP=ccl-bin
     - LISP=abcl
     - LISP=clisp
