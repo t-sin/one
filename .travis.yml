@@ -1,7 +1,11 @@
 language: common-lisp
-sudo: required
+sudo: false
 
 env:
+  global:
+    - ROSWELL_INSTALL_DIR: $HOME/.roswell
+    - PATH: $PATH:$HOME/.roswell/bin
+    - COVERAGE_EXCLUDE: tests:roswell
   matrix:
     - LISP=sbcl-bin
     - LISP=ccl-bin
@@ -11,6 +15,11 @@ env:
 
 install:
   - curl -L https://raw.githubusercontent.com/snmsts/roswell/release/scripts/install-for-ci.sh | sh
+  - ros install fukamachi/rove
+
+before_script:
+  - ros --version
+  - ros config
 
 script:
-  - ros -s prove -e '(or (prove:run :one-test) (uiop:quit -1))'
+  - ros -s rove one.asd
