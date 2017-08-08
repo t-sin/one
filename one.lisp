@@ -10,7 +10,8 @@
            :for))
 (in-package :one)
 
-;;; input
+
+;;; IO
 
 (defun read* (stream)
   (read stream nil :eof))
@@ -26,6 +27,7 @@
 
 (defun print* (input)
   (format t "~a~%" input))
+
 
 ;;; processing
 
