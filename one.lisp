@@ -48,10 +48,6 @@
     (when (funcall predicate input)
       (funcall next-op input))))
 
-(defun $map (next-op)
-  (lambda (sequence)
-    (mapcar next-op (coerce sequence 'list))))
-
 (defun $gather (gather-op)
   (let (buffer)
     (flet ((slurp (input) (push input buffer))
