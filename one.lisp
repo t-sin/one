@@ -55,6 +55,11 @@
              (funcall op (funcall gather-op (nreverse buffer)))))
       (values #'slurp #'barf))))
 
+(defun $fold (fold-op)
+  (let (accum)
+    (flet ((slurp (input) (setf accum (funcall fold-op accum input)))
+           (barf (op) (funcall op accum))))))
+
 ;;; DSL
 
 (defun connective-p (e)
