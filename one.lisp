@@ -28,12 +28,14 @@
        :do (funcall op e))))
 
 (defmethod $scan ((pathname pathname) (read-fn function))
+  "Reads data from `pathname` with `read-fn` and calls successor operations until :eof. This is an internal constructive operation."
   (lambda (op)
     (with-open-file (in pathname
                       :direction :input)
       (funcall ($scan in read-fn) op))))
 
 (defmethod $scan ((sequence sequence) (step-fn function))
+  "Calls successor operations on contents of `sequence`. This is an internal constructive operation."
   (cond ((listp sequence)
          (lambda (op)
            (loop
