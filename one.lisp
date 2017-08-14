@@ -20,7 +20,7 @@
 
 (defgeneric $scan (input next-fn))
 (defmethod $scan ((stream stream) (read-fn function))
-  "Reads data from `stream` with `read-fn` and calls successor operations until :eof. This is an internal constructive operation."
+  "Makes scannig behavior. It reads data from `stream` with `read-fn` and calls successor operations (`op`) until :eof."
   (lambda (op)
     (loop
        :for e := (funcall read-fn stream)
@@ -28,14 +28,14 @@
        :do (funcall op e))))
 
 (defmethod $scan ((pathname pathname) (read-fn function))
-  "Reads data from `pathname` with `read-fn` and calls successor operations until :eof. This is an internal constructive operation."
+  "Makes scanning behavior. It reads data from `pathname` with `read-fn` and calls successor operations (`op`) until :eof."
   (lambda (op)
     (with-open-file (in pathname
                       :direction :input)
       (funcall ($scan in read-fn) op))))
 
 (defmethod $scan ((sequence sequence) (step-fn function))
-  "Calls successor operations on contents of `sequence`. This is an internal constructive operation."
+  "Makes scanning behavior. It calls successor operations (`op`) on contents of `sequence`."
   (cond ((listp sequence)
          (lambda (op)
            (loop
@@ -48,11 +48,18 @@
               :do (funcall op e))))))
 
 (defun $call-if (predicate next-op)
+  "Makes selective operation. The operation made by `$call-if` calls successor operations (`next-op`) when `predicate` returns true."
   (lambda (input)
     (when (funcall predicate input)
       (funcall next-op input))))
 
 (defun $gather (gather-op)
+  "Makes gathering operation. The operation made by `$gather` returns two functions:
+
+1. buffering function locally named `slurp`
+2. dumping function locally named `barf`
+
+'Gathering' means it buffers values which is applied with `slurp`. `barf` dumps buffrred values as list with applying `gather-op`. `$gather` may be used to traverse list-like data, for example, sorting."
   (let (buffer)
     (flet ((slurp (input) (push input buffer))
            (barf (op)
