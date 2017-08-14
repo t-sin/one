@@ -20,6 +20,7 @@
 
 (defgeneric $scan (input next-fn))
 (defmethod $scan ((stream stream) (read-fn function))
+  "Reads data from `stream` with `read-fn` and calls successor operations until :eof. This is an internal constructive operation."
   (lambda (op)
     (loop
        :for e := (funcall read-fn stream)
