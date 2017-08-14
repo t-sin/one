@@ -31,11 +31,11 @@
                       :direction :input)
       (funcall ($scan in read-fn) op))))
 
-(defmethod $scan ((sequence sequence) (next-fn function))
+(defmethod $scan ((sequence sequence) (step-fn function))
   (cond ((listp sequence)
          (lambda (op)
            (loop
-              :for e :in sequence
+              :for e :in sequence :by step-fn
               :do (funcall op e))))
         ((vectorp sequence)
          (lambda (op)
