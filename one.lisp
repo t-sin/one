@@ -11,7 +11,8 @@
            :read-line*
            :print*
 
-           :for))
+           :for
+           :for*))
 (in-package :one)
 
 
@@ -132,3 +133,6 @@
   (if (and (symbolp input) (string= (symbol-name input) "-"))
       `(funcall ,(build (parse (replace-connective body))) ,*standard-input*)
       `(funcall ,(build (parse (replace-connective body))) ,input)))
+
+(defmacro for* (input &body body)
+  `(one:for ,input ,@(append body '($ one:print*))))
