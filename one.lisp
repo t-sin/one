@@ -67,6 +67,7 @@
       (values #'slurp #'barf))))
 
 (defun $fold (fold-op init-value)
+  "Makes gathering operation. The operation made by `$fold` is similar to `$gather`, but `$fold` does not buffer all input. It can be used to `reduce` on list-like data."
   (let ((accum init-value))
     (flet ((slurp (input) (setf accum (funcall fold-op accum input)))
            (barf (op) (funcall op accum)))
