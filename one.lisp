@@ -126,8 +126,10 @@
                stree
              (setf next-op (simplified-lambda next-op))
              (ecase connective
+               ;; scanning behavior
                (< (let ((in (gensym)))
                     (build optree `(lambda (,in) (funcall ($scan ,in ,next-op) ,ops)))))
+               ;; gathering behavior
                (> (let ((in (gensym))
                         (slurp (gensym))
                         (barf (gensym)))
@@ -135,8 +137,11 @@
                          ($gather ,next-op)
                        (lambda (,in) (funcall ,(build optree slurp) ,in)
                                (funcall ,barf ,ops)))))
+               ;; folding behavior
+               ;; conmposing behavior
                ($ (let ((in (gensym)))
                     (build optree `(lambda (,in) (funcall ,ops (funcall ,next-op ,in))))))
+               ;; selectiver behavior
                (? (let ((in (gensym)))
                     (build optree `(lambda (,in) (funcall ($call-if ,next-op ,ops) ,in))))))))))
 
