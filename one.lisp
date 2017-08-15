@@ -66,10 +66,11 @@
              (funcall op (funcall gather-op (nreverse buffer)))))
       (values #'slurp #'barf))))
 
-(defun $fold (fold-op)
-  (let (accum)
+(defun $fold (fold-op init-value)
+  (let ((accum init-value))
     (flet ((slurp (input) (setf accum (funcall fold-op accum input)))
-           (barf (op) (funcall op accum))))))
+           (barf (op) (funcall op accum)))
+      (values #'slurp #'barf))))
 
 ;;; DSL
 
