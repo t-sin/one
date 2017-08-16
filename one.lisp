@@ -132,28 +132,49 @@
 
 (defun build (stree &optional (ops #'identity))
   (cond ((null stree) ops)
-        (t (destructuring-bind (connective optree next-op)
-               stree
-             (setf next-op (simplified-lambda next-op))
-             (ecase connective
-               ;; scanning behavior
-               (< (let ((in (gensym)))
-                    (build optree `(lambda (,in) (funcall ($scan ,in ,next-op) ,ops)))))
-               ;; gathering behavior
-               (> (let ((in (gensym))
-                        (slurp (gensym))
-                        (barf (gensym)))
-                    `(multiple-value-bind (,slurp ,barf)
-                         ($gather ,next-op)
-                       (lambda (,in) (funcall ,(build optree slurp) ,in)
-                               (funcall ,barf ,ops)))))
-               ;; folding behavior
-               ;; conmposing behavior
-               ($ (let ((in (gensym)))
-                    (build optree `(lambda (,in) (funcall ,ops (funcall ,next-op ,in))))))
-               ;; selectiver behavior
-               (? (let ((in (gensym)))
-                    (build optree `(lambda (,in) (funcall ($call-if ,next-op ,ops) ,in))))))))))
+        ((= (length stree) 3)
+         (destructuring-bind (connective optree next-op)
+             stree
+           (setf next-op (simplified-lambda next-op))
+           (ecase connective
+             ;; scanning behavior
+             (< (let ((in (gensym)))
+                  (build optree `(lambda (,in) (funcall ($scan ,in ,next-op) ,ops)))))
+             ;; gathering behavior
+             (> (let ((in (gensym))
+                      (slurp (gensym))
+                      (barf (gensym)))
+                  `(multiple-value-bind (,slurp ,barf)
+                       ($gather ,next-op)
+                     (lambda (,in) (funcall ,(build optree slurp) ,in)
+                             (funcall ,barf ,ops)))))
+             ;; folding behavior without initial value
+             (+> (let ((in (gensym))
+                       (slurp (gensym))
+                       (barf (gensym)))
+                   `(multiple-value-bind (,slurp ,barf)
+                        ($fold ,next-op nil)
+                      (lambda (,in) (funcall ,(build optree slurp) ,in)
+                              (funcall ,barf ,ops)))))
+             ;; conmposing behavior
+             ($ (let ((in (gensym)))
+                  (build optree `(lambda (,in) (funcall ,ops (funcall ,next-op ,in))))))
+             ;; selectiver behavior
+             (? (let ((in (gensym)))
+                  (build optree `(lambda (,in) (funcall ($call-if ,next-op ,ops) ,in))))))))
+        ((= (length stree) 4)
+         (destructuring-bind (connective optree next-op init-value)
+             stree
+           (setf next-op (simplified-lambda next-op))
+           (ecase connective
+             ;; folding behavior with initial value
+             (+> (let ((in (gensym))
+                       (slurp (gensym))
+                       (barf (gensym)))
+                   `(multiple-value-bind (,slurp ,barf)
+                        ($fold ,next-op ,init-value)
+                      (lambda (,in) (funcall ,(build optree slurp) ,in)
+                              (funcall ,barf ,ops))))))))))
 
 
 (defmacro for (input &body body)
