@@ -119,7 +119,6 @@
                (let ((connective (first body))
                      (fold-op (second body))
                      (init-value (third body)))
-                 (print (connective-p init-value))
                  (if (connective-p init-value)
                      (parse (cddr body) (list connective stree fold-op))
                      (parse (cdddr body) (list connective stree fold-op init-value))))
