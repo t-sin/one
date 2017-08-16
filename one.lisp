@@ -106,10 +106,12 @@
 
 (defun simplified-lambda (code)
   (if (listp code)
-    (let ((input (gensym)))
-      `(lambda (,input)
-           ,(replace-place-holder input code)))
-    `(function ,code)))
+      (if (eq (first code) 'lambda)
+          code
+          (let ((input (gensym)))
+            `(lambda (,input)
+               ,(replace-place-holder input code))))
+      `(function ,code)))
 
 (defun parse (body &optional stree)
   (let ((fst (first body)))
