@@ -76,7 +76,7 @@
 ;;; DSL
 
 (defun connective-p (e)
-  (member e '(< > $ ?)
+  (member e '(< > +> $ ?)
           :test (lambda (a b)
                   (and (symbolp a) (string= (symbol-name a) (symbol-name b))))))
 
