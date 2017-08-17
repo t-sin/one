@@ -167,9 +167,7 @@
                (< (behave-scanning op optree))
                (> (behave-gathering op optree))
                (+> (behave-folding op nil optree))
-               ;; conmposing behavior
                ($ (behave-composing op optree))
-               ;; selectiver behavior
                (? (behave-selective op optree)))))
           ((= (length stree) 4)
            (destructuring-bind (connective optree op init-value)
