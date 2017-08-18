@@ -1,7 +1,6 @@
 # One - Input processing framework
 
 [![Build Status](https://travis-ci.org/t-sin/one.svg?branch=master)](https://travis-ci.org/t-sin/one)
-[![Circle CI](https://circleci.com/gh/t-sin/one.svg?style=svg)](https://circleci.com/gh/t-sin/one)
 
 One provides a framework for processing input like stream, pathname and sequence.
 
