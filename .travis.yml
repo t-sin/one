@@ -22,4 +22,4 @@ before_script:
   - ros config
 
 script:
-  - ros -s rove one.asd
+  - rove one.asd
