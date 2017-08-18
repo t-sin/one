@@ -31,7 +31,7 @@
   "Makes scanning behavior. It reads data from `pathname` with `read-fn` and calls successor operations (`op`) until :eof."
   (lambda (op)
     (with-open-file (in pathname
-                      :direction :input)
+                        :direction :input)
       (funcall ($scan in read-fn) op))))
 
 (defmethod $scan ((sequence sequence) (step-fn function))
