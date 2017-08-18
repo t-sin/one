@@ -20,12 +20,22 @@
                     #'identity 42)
            'simple-error)))
 
-    (testing "read-fn which specified is used")
-    (testing "read-fn must be returns :eof when stream end")
+    (testing "read-fn specified is used")
+    (testing "read-fn must be returns :eof when stream end, or signals error")
     (testing "op is called for all stream elements"))
 
-  (testing "pathname")
-  (testing "sequence"))
+  (testing "pathname"
+    (testing "function which is returned by `$scan`")
+    (testing "arity of returned function is 1")
+    (testing "read-fn specified is used")
+    (testing "read-fn must be returns :eof when stream end, or signals error")
+    (testing "op is called for all stream elements"))
+
+  (testing "sequence"
+    (testing "function which is returned by `$scan`")
+    (testing "arity of returned function is 1")
+    (testing "next-fn specified is used")
+    (testing "op is called for all stream elements")))
 
 (deftest internal-operator-call-if-test
   (diag "ok"))
