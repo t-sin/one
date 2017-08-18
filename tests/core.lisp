@@ -12,6 +12,13 @@
                 value))
             (lambda () buffer))))
 
+(defun make-test-op (s)
+  (let ((idx 0))
+    (lambda (in)
+      (diag (format nil "actually: ~a, expected: ~a~%" in (char s idx)))
+      (ok (eq in (char s idx)))
+      (incf idx))))
+
 (deftest internal-operator-scan-test
   (testing "stream"
     (testing "function which is returned by `$scan`"
@@ -45,7 +52,11 @@
         (ok (signals (funcall (one/core:$scan in #'read-char) #'identity)
                      'error))))
 
-    (testing "op is called for all stream elements"))
+    (testing "op is called for all stream elements")
+    (let ((s "hachi"))
+      (with-input-from-string (in s)
+        (funcall (one/core:$scan in #'one:read-char*)
+                 (make-test-op s)))))
 
   (testing "pathname"
     (testing "function which is returned by `$scan`")
