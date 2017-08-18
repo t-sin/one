@@ -37,7 +37,14 @@
           (funcall (one/core:$scan in read-fn) #'identity))
         (ok (equal (funcall get-fn) '(:eof "nobita-san")))))
 
-    (testing "read-fn must be returns :eof when stream end, or signals error")
+    (testing "read-fn must be returns :eof when stream end, or signals error"
+      (with-input-from-string (in "nobita-san")
+        (ok (null (funcall (one/core:$scan in (lambda (stream) (read-char stream nil :eof)))
+                           #'identity))))
+      (with-input-from-string (in "nobita-san")
+        (ok (signals (funcall (one/core:$scan in #'read-char) #'identity)
+                     'error))))
+
     (testing "op is called for all stream elements"))
 
   (testing "pathname"
