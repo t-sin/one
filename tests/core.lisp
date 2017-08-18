@@ -10,17 +10,18 @@
                  'function)))
 
     (testing "arity of returned function is 1"
-      (ng (signals
-           (funcall (one::$scan (make-string-input-stream "hogehoge") #'one:read-line*))
-           'simple-error))
-      (ok (null (funcall (one::$scan (make-string-input-stream "hogehoge") #'one:read-line*)
-                         #'identity)))
-      (ng (signals
-           (funcall (one::$scan (make-string-input-stream "hogehoge") #'one:read-line*)
-                    #'identity 42)
-           'simple-error)))
-
     (testing "read-fn specified is used")
+      (ng (signals (with-input-from-string (in "hogehoge")
+                     (funcall (one/core:$scan in #'one:read-line*)))
+                   'simple-error))
+      (ok (null (with-input-from-string (in "hogehoge")
+                  (funcall (one/core:$scan in #'one:read-line*)
+                           #'identity))))
+      (ng (signals (with-input-from-string (in "hogehoge")
+                     (funcall (one/core:$scan in #'one:read-line*)
+                              #'identity 42))
+                   'simple-error)))
+
     (testing "read-fn must be returns :eof when stream end, or signals error")
     (testing "op is called for all stream elements"))
 
