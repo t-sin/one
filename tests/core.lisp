@@ -12,12 +12,17 @@
                 value))
             (lambda () buffer))))
 
-(defun make-test-op (s)
+(defun make-chareq-op (s)
   (let ((idx 0))
     (lambda (in)
       (diag (format nil "actually: ~s, expected: ~s~%" in (char s idx)))
       (ok (eq in (char s idx)))
       (incf idx))))
+
+(defun make-get-op ()
+  (let ((buffer))
+    (values (lambda (input) (push input buffer))
+            (lambda () buffer))))
 
 (deftest internal-operator-scan-test
   (testing "stream"
@@ -56,7 +61,7 @@
     (let ((s "hachi"))
       (with-input-from-string (in s)
         (funcall (one/core:$scan in #'one:read-char*)
-                 (make-test-op s)))))
+                 (make-chareq-op s)))))
 
   (testing "pathname"
     (testing "function which is returned by `$scan`"
@@ -93,13 +98,28 @@
     (testing "op is called for all stream elements"
       (with-open-file (in (asdf:system-relative-pathname :one "tests/data.txt"))
         (funcall (one/core:$scan in #'one:read-char*)
-                 (make-test-op (format nil "wan~%nyan~%"))))))
+                 (make-chareq-op (format nil "wan~%nyan~%"))))))
 
   (testing "sequence"
-    (testing "function which is returned by `$scan`")
-    (testing "arity of returned function is 1")
-    (testing "next-fn specified is used")
-    (testing "op is called for all stream elements")))
+    (testing "function which is returned by `$scan`"
+      (ok (typep (one/core:$scan '(1 2 3 4) #'cdr) 'function)))
+
+    (testing "arity of returned function is 1"
+      (ng (signals (funcall (one/core:$scan '(1 2 3 4) #'cdr)) 'simple-error))
+      (ok (null (funcall (one/core:$scan '(1 2 3 4) #'cdr) #'identity)))
+      (ng (signals (funcall (one/core:$scan '(1 2 3 4) #'cdr)
+                            #'identity 25)
+                   'simple-error)))
+
+    (testing "next-fn specified is used"
+      (multiple-value-bind (op get-fn)
+          (make-get-op)
+        (funcall (one/core:$scan '(1 2 3 4) #'cddr) op)
+        (ok (equal (funcall get-fn) '(3 1)))))
+
+    (testing "op is called for all stream elements"
+      (let ((s "ichi"))
+        (funcall (one/core:$scan s #'identity) (make-chareq-op s))))))
 
 (deftest internal-operator-call-if-test
   (diag "ok"))
