@@ -15,7 +15,7 @@
 (defun make-test-op (s)
   (let ((idx 0))
     (lambda (in)
-      (diag (format nil "actually: ~a, expected: ~a~%" in (char s idx)))
+      (diag (format nil "actually: ~s, expected: ~s~%" in (char s idx)))
       (ok (eq in (char s idx)))
       (incf idx))))
 
