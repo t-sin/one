@@ -22,19 +22,19 @@
 (deftest internal-operator-scan-test
   (testing "stream"
     (testing "function which is returned by `$scan`"
-      (ok (typep (one::$scan (make-string-input-stream "hogehoge") #'one:read-line*)
-                 'function)))
+      (with-input-from-string (in "wan nyan")
+        (ok (typep (one/core:$scan in #'one:read-line*) 'function))))
 
     (testing "arity of returned function is 1"
-      (ng (signals (with-input-from-string (in "hogehoge")
+      (ng (signals (with-input-from-string (in "wan nyan")
                      (funcall (one/core:$scan in #'one:read-line*)))
                    'simple-error))
-      (ok (null (with-input-from-string (in "hogehoge")
+      (ok (null (with-input-from-string (in "wan nyan")
                   (funcall (one/core:$scan in #'one:read-line*)
                            #'identity))))
-      (ng (signals (with-input-from-string (in "hogehoge")
+      (ng (signals (with-input-from-string (in "wan nyan")
                      (funcall (one/core:$scan in #'one:read-line*)
-                              #'identity 42))
+                              #'identity 25))
                    'simple-error)))
 
     (testing "read-fn specified is used"
