@@ -3,6 +3,15 @@
   (:use :cl :rove))
 (in-package :one/tests/core)
 
+
+(defun make-test-read-fn ()
+  (let ((buffer))
+    (values (lambda (stream)
+              (let ((value (read-line stream nil :eof)))
+                (push value buffer)
+                value))
+            (lambda () buffer))))
+
 (deftest internal-operator-scan-test
   (testing "stream"
     (testing "function which is returned by `$scan`"
@@ -10,7 +19,6 @@
                  'function)))
 
     (testing "arity of returned function is 1"
-    (testing "read-fn specified is used")
       (ng (signals (with-input-from-string (in "hogehoge")
                      (funcall (one/core:$scan in #'one:read-line*)))
                    'simple-error))
@@ -21,6 +29,13 @@
                      (funcall (one/core:$scan in #'one:read-line*)
                               #'identity 42))
                    'simple-error)))
+
+    (testing "read-fn specified is used"
+      (multiple-value-bind (read-fn get-fn)
+          (make-test-read-fn)
+        (with-input-from-string (in "nobita-san")
+          (funcall (one/core:$scan in read-fn) #'identity))
+        (ok (equal (funcall get-fn) '(:eof "nobita-san")))))
 
     (testing "read-fn must be returns :eof when stream end, or signals error")
     (testing "op is called for all stream elements"))
