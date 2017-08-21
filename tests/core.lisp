@@ -150,7 +150,25 @@
       (ok (null (funcall get-fn))))))
 
 (deftest internal-operator-gather-test
-  (diag "ok"))
+  (testing "`$gather` returns two functions"
+    (ok (eq (length (multiple-value-list (one/core:$gather #'identity))) 2))
+    (multiple-value-bind (slurp barf)
+        (one/core:$gather #'identity)
+      (ok (typep slurp 'function))
+      (ok (typep barf 'function))))
+
+  (testing "arity of 'slurp' is 1, input from previous operation"
+    (multiple-value-bind (slurp barf)
+        (one/core:$gather #'identity)
+      (ok (signals (funcall slurp) 'simple-error))
+      (ok (funcall slurp 1))
+      (ok (signals (funcall slurp 1 2) 'simple-error))
+      (ok (signals (funcall barf) 'simple-error))
+      (ok (funcall barf #'identity))
+      (ok (signals (funcall barf #'identity 2) 'simple-error))))
+
+  (testing "arity of 'barf' is 1, successor operation")
+  (testing "when calling 'barf', successor operation is applied to buffered input"))
 
 (deftest internal-operator-fold-test
   (diag "ok"))
