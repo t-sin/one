@@ -31,16 +31,16 @@
         (ok (typep (one/core:$scan in #'one:read-line*) 'function))))
 
     (testing "arity of returned function is 1"
-      (ng (signals (with-input-from-string (in "wan nyan")
+      (ok (signals (with-input-from-string (in "wan nyan")
                      (funcall (one/core:$scan in #'one:read-line*)))
-                   'simple-error))
+                   'error))
       (ok (null (with-input-from-string (in "wan nyan")
                   (funcall (one/core:$scan in #'one:read-line*)
                            #'identity))))
-      (ng (signals (with-input-from-string (in "wan nyan")
+      (ok (signals (with-input-from-string (in "wan nyan")
                      (funcall (one/core:$scan in #'one:read-line*)
                               #'identity 25))
-                   'simple-error)))
+                   'error)))
 
     (testing "read-fn specified is used"
       (multiple-value-bind (read-fn get-fn)
@@ -69,16 +69,16 @@
         (ok (typep (one/core:$scan in #'one:read-line*) 'function))))
 
     (testing "arity of returned function is 1"
-      (ng (signals (with-open-file (in (asdf:system-relative-pathname :one "tests/data.txt"))
+      (ok (signals (with-open-file (in (asdf:system-relative-pathname :one "tests/data.txt"))
                      (funcall (one/core:$scan in #'one:read-line*)))
-                   'simple-error))
+                   'error))
       (ok (null (with-open-file (in (asdf:system-relative-pathname :one "tests/data.txt"))
                   (funcall (one/core:$scan in #'one:read-line*)
                            #'identity))))
-      (ng (signals (with-open-file (in (asdf:system-relative-pathname :one "tests/data.txt"))
+      (ok (signals (with-open-file (in (asdf:system-relative-pathname :one "tests/data.txt"))
                      (funcall (one/core:$scan in #'one:read-line*)
                               #'identity 25))
-                   'simple-error)))
+                   'error)))
 
     (testing "read-fn specified is used"
       (multiple-value-bind (read-fn get-fn)
@@ -105,11 +105,11 @@
       (ok (typep (one/core:$scan '(1 2 3 4) #'cdr) 'function)))
 
     (testing "arity of returned function is 1"
-      (ng (signals (funcall (one/core:$scan '(1 2 3 4) #'cdr)) 'simple-error))
+      (ok (signals (funcall (one/core:$scan '(1 2 3 4) #'cdr)) 'error))
       (ok (null (funcall (one/core:$scan '(1 2 3 4) #'cdr) #'identity)))
-      (ng (signals (funcall (one/core:$scan '(1 2 3 4) #'cdr)
+      (ok (signals (funcall (one/core:$scan '(1 2 3 4) #'cdr)
                             #'identity 25)
-                   'simple-error)))
+                   'error)))
 
     (testing "next-fn specified is used"
       (multiple-value-bind (op get-fn)
@@ -132,12 +132,12 @@
     (ok (typep (one/core:$call-if #'identity #'identity) 'function)))
 
   (testing "arity of returned function is 1, that is input"
-    (ng (signals (funcall (one/core:$call-if #'identity #'identity))
-                 'simple-error))
+    (ok (signals (funcall (one/core:$call-if #'identity #'identity))
+                 'error))
     (diag "`$call-if` returns evaluated value, but don't care")
     (ok (funcall (one/core:$call-if #'identity #'identity) "ichi"))
-    (ng (signals (funcall (one/core:$call-if #'identity #'identity) "ichi")
-                 'simple-error)))
+    (ok (signals (funcall (one/core:$call-if #'identity #'identity) "ichi" "hachi")
+                 'error)))
 
   (testing "called successor operation when input is true by predicate"
     (multiple-value-bind (op get-fn)
@@ -160,12 +160,12 @@
   (testing "arity of 'slurp' is 1, input from previous operation"
     (multiple-value-bind (slurp barf)
         (one/core:$gather #'identity)
-      (ok (signals (funcall slurp) 'simple-error))
+      (ok (signals (funcall slurp) 'error))
       (ok (funcall slurp 1))
-      (ok (signals (funcall slurp 1 2) 'simple-error))
-      (ok (signals (funcall barf) 'simple-error))
+      (ok (signals (funcall slurp 1 2) 'error))
+      (ok (signals (funcall barf) 'error))
       (ok (funcall barf #'identity))
-      (ok (signals (funcall barf #'identity 2) 'simple-error))))
+      (ok (signals (funcall barf #'identity 2) 'error))))
 
   (testing "arity of 'barf' is 1, successor operation")
   (testing "when calling 'barf', successor operation is applied to buffered input"))
