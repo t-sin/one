@@ -256,4 +256,32 @@
       (ok (funcall slurp 1))
       (ok (signals (funcall slurp 1 2) 'error))))
 
-  (testing "gathering operation do something like reduce"))
+  (testing "folding operation do something like reduce"
+    (testing "fold-op takes two parameter: accumrator initialized init-value and input"
+      (ok (signals (funcall (one/core:$fold (lambda (x) x) nil) 0) 'error))
+      (ok (signals (funcall (one/core:$fold (lambda (x y) y) nil))))
+      (ok (signals (funcall (one/core:$fold (lambda (x y z) z) nil) 'error))))
+
+    (testing "folding operation pass initial value through in folding process"
+      (multiple-value-bind (slurp barf)
+          (one/core:$fold (lambda (x y) x) "ichi")
+        (funcall slurp "hachi")
+        (funcall slurp "chiko")
+        (funcall slurp "bulltaro")
+        (funcall slurp "daku")
+        (ok (equal (funcall barf #'identity) "ichi")))
+
+      (testing "folding operation with concatenation"
+        (multiple-value-bind (slurp barf)
+            (one/core:$fold (lambda (x y) (format nil "~a-~a" x y)) "")
+          (funcall slurp "hachi")
+          (funcall slurp "chiko")
+          (funcall slurp "bulltaro")
+          (funcall slurp "daku")
+          (ok (equal (funcall barf #'identity) "-hachi-chiko-bulltaro-daku"))))))
+
+  (testing "successor operation is called"
+    (multiple-value-bind (slurp barf)
+       (one/core:$fold (lambda (x y) y) nil)
+      (funcall slurp "hachi")
+      (ok (equal (funcall barf (lambda (x) (format nil "~a!!!!" x))) "hachi!!!!")))))
