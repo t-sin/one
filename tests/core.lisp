@@ -121,8 +121,33 @@
       (let ((s "ichi"))
         (funcall (one/core:$scan s #'identity) (make-chareq-op s))))))
 
+
+(defun make-call-if-test-op ()
+  (let ((called nil))
+    (values (lambda (input) (setf called input))
+            (lambda () called))))
+
 (deftest internal-operator-call-if-test
-  (diag "ok"))
+  (testing "function is returned when `$call-if` is called"
+    (ok (typep (one/core:$call-if #'identity #'identity) 'function)))
+
+  (testing "arity of returned function is 1, that is input"
+    (ng (signals (funcall (one/core:$call-if #'identity #'identity))
+                 'simple-error))
+    (diag "`$call-if` returns evaluated value, but don't care")
+    (ok (funcall (one/core:$call-if #'identity #'identity) "ichi"))
+    (ng (signals (funcall (one/core:$call-if #'identity #'identity) "ichi")
+                 'simple-error)))
+
+  (testing "called successor operation when input is true by predicate"
+    (multiple-value-bind (op get-fn)
+        (make-call-if-test-op)
+      (funcall (one/core:$call-if #'zerop op) 0)
+      (ok (eq (funcall get-fn) 0)))
+    (multiple-value-bind (op get-fn)
+        (make-call-if-test-op)
+      (funcall (one/core:$call-if #'zerop op) 1)
+      (ok (null (funcall get-fn))))))
 
 (deftest internal-operator-gather-test
   (diag "ok"))
