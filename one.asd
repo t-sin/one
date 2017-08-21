@@ -26,6 +26,7 @@
 (defsystem :one/tests
   :class :package-inferred-system
   :depends-on ("rove"
+               "one/tests/io"
                "one/tests/core"
                "one/tests/dsl")
   :perform (test-op (o c) (uiop:symbol-call :rove ':run c)))
