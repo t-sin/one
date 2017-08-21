@@ -162,12 +162,16 @@
         (one/core:$gather #'identity)
       (ok (signals (funcall slurp) 'error))
       (ok (funcall slurp 1))
-      (ok (signals (funcall slurp 1 2) 'error))
+      (ok (signals (funcall slurp 1 2) 'error))))
+
+  (testing "arity of 'barf' is 1, successor operation"
+    (multiple-value-bind (slurp barf)
+        (one/core:$gather #'identity)
+      (funcall slurp 1)
       (ok (signals (funcall barf) 'error))
       (ok (funcall barf #'identity))
       (ok (signals (funcall barf #'identity 2) 'error))))
 
-  (testing "arity of 'barf' is 1, successor operation")
   (testing "when calling 'barf', successor operation is applied to buffered input"))
 
 (deftest internal-operator-fold-test
