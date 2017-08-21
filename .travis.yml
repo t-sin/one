@@ -10,7 +10,7 @@ env:
     - LISP=sbcl-bin COVERALLS=true
     - LISP=ccl-bin
     - LISP=abcl
-    - LISP=clisp
+#    - LISP=clisp
     - LISP=ecl
 
 install:
