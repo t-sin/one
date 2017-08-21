@@ -236,4 +236,18 @@
                    "nobita-doraemon-shizuka-takeshi-suneo"))))))
 
 (deftest internal-operator-fold-test
-  (diag "ok"))
+  (testing "`$fold` returns two functions"
+    (multiple-value-bind (slurp barf)
+        (one/core:$fold (lambda (x y) y) nil)
+      (ok (typep slurp 'function))
+      (ok (typep barf 'function))))
+
+  (testing "arity of 'slurp' is 1, input from previous operation"
+    (multiple-value-bind (slurp barf)
+        (one/core:$fold (lambda (x y) y) nil)
+      (ok (signals (funcall slurp) 'error))
+      (ok (funcall slurp 1))
+      (ok (signals (funcall slurp 2 1) 'error))))
+
+  (testing "arity of 'barf' is 1, successor operation")
+  (testing "gathering operation do something like reduce"))
