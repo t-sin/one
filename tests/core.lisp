@@ -249,5 +249,11 @@
       (ok (funcall slurp 1))
       (ok (signals (funcall slurp 2 1) 'error))))
 
-  (testing "arity of 'barf' is 1, successor operation")
+  (testing "arity of 'barf' is 1, successor operation"
+    (multiple-value-bind (slurp barf)
+        (one/core:$fold (lambda (x y) y) nil)
+      (ok (signals (funcall slurp) 'error))
+      (ok (funcall slurp 1))
+      (ok (signals (funcall slurp 1 2) 'error))))
+
   (testing "gathering operation do something like reduce"))
