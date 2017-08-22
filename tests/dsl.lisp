@@ -54,3 +54,34 @@
       (testing "otherwise, that is simplified lambda, wrap it with lambda"
         (ok (expands (one::simplified-lambda '(format nil "  ~a" _))
                      '#'(lambda (#:slmd) (format nil "  ~a" #:slmd)))))))
+
+(deftest one-parse-test
+  (testing "empty body, returns stree"
+    (ok (eq (one::parse '() nil) nil))
+    (ok (eq (one::parse '() 'stree) 'stree)))
+
+  (testing "basic syntax is: [conn op-fn]*"
+    (ok (equal (one::parse '(one::$ fn1))
+               '(one::$ nil fn1)))
+    (ok (equal (one::parse '(one::$ fn1 one::> fn2))
+               '(one::> (one::$ nil fn1) fn2)))
+    (ok (equal (one::parse '(one::$ fn1 one::> fn2 one::? fn3))
+               '(one::? (one::> (one::$ nil fn1) fn2) fn3))))
+
+  (testing "special treatment for folding behavior `+>`"
+    (ok (equal (one::parse '(one::$ fn1 one::+> fn2 one::? fn3))
+               '(one::? (one::+> (one::$ nil fn1) fn2) fn3))
+        "1. folding behavior with one parameter: folding operation")
+    (ok (equal (one::parse '(one::$ fn1 one::+> fn2 :init one::? fn3))
+               '(one::? (one::+> (one::$ nil fn1) fn2 :init) fn3))
+        "2. folding behavior with two parameters: folding operation and initial value"))
+
+  (testing "syntax errors"
+    (ok (signals (one::parse '(-> fn1)) 'error)
+        "error occurs: first element is not a connective")
+    (ok (signals (one::parse '(fn1 fn2)) 'error)
+        "error occurs: first element is not a connective"))
+
+  (testing "some abnormal case"
+    (ok (equal (one::parse '(one::$)) '(one::$ nil nil))
+        "parse OK, empty syntax tree is returned. this maybe raise error on `build`")))
