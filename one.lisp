@@ -56,7 +56,7 @@
   (if (listp code)
       (if (eq (first code) 'lambda)
           code
-          (let ((input (gensym)))
+          (let ((input (gensym "SLMD")))
             `(lambda (,input)
                ,(replace-place-holder input code))))
       `(function ,code)))
