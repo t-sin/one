@@ -130,7 +130,7 @@
 
 (defmacro for (input &body body)
   (if (and (symbolp input) (string= (symbol-name input) "-"))
-      `(funcall ,(build (parse (replace-connective body))) ,*standard-input*)
+      `(funcall ,(build (parse (replace-connective body))) '*standard-input*)
       `(funcall ,(build (parse (replace-connective body))) ,input)))
 
 (defmacro for* (input &body body)

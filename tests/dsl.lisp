@@ -134,3 +134,18 @@
   (testing "complex construction"
     (diag "to be written...")))
 
+(deftest one-for-test
+  (testing "normal case"
+    (ok (expands '(one:for #P"one.asd" < one:read-line* $ print)
+                 '(funcall (lambda (#:in2)
+                             (funcall (one/core:$scan #:in2 #'one:read-line*)
+                                      (lambda (#:in)
+                                        (funcall #'identity (funcall #'print #:in)))))
+                           #P"one.asd"))))
+  (testing "shorthand for standard input"
+    (ok (expands '(one:for - < one:read-line* $ print)
+                 '(funcall (lambda (#:in2)
+                             (funcall (one/core:$scan #:in2 #'one:read-line*)
+                                      (lambda (#:in)
+                                        (funcall #'identity (funcall #'print #:in)))))
+                           '*standard-input*)))))
