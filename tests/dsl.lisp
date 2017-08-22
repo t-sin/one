@@ -51,6 +51,13 @@
         (ok (equal (one::simplified-lambda '(lambda (x) (* x 2)))
                    '(lambda (x) (* x 2)))))
 
+      (testing "if first element is `function`, it's a function, pass through `code`"
+        (ok (equal (one::simplified-lambda '(function identity))
+                   '(function identity)))
+        (testing "tricky case ;p"
+          (ok (equal (one::simplified-lambda (read-from-string "#'identity"))
+                     '(function identity)))))
+
       (testing "otherwise, that is simplified lambda, wrap it with lambda"
         (ok (expands (one::simplified-lambda '(format nil "  ~a" _))
                      '#'(lambda (#:slmd) (format nil "  ~a" #:slmd)))))))

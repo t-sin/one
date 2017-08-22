@@ -56,7 +56,7 @@
 
 (defun simplified-lambda (code)
   (if (listp code)
-      (if (eq (first code) 'lambda)
+      (if (member (first code) '(lambda function))
           code
           (let ((input (gensym "SLMD")))
             `(lambda (,input)
