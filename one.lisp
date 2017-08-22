@@ -12,6 +12,8 @@
                 :read-line*
                 :read-byte*
                 :print*)
+  (:import-from :one/error
+                :one-syntax-error)
   (:export :read*
            :read-char*
            :read-line*
@@ -76,7 +78,8 @@
                      (next-op (second body))
                      (rest (cddr body)))
                  (parse rest (list connective stree next-op)))))
-          (t (error (format nil "invalid syntax: ~s" body))))))
+          (t (error 'one-syntax-error :message
+                    (format nil "Parse error: ~s is not a one's connective in ~s" fst body))))))
 
 (defun build (stree &optional (succ-op #'identity))
   (flet ((behave-scanning (op optree)

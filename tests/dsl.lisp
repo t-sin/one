@@ -77,9 +77,9 @@
         "2. folding behavior with two parameters: folding operation and initial value"))
 
   (testing "syntax errors"
-    (ok (signals (one::parse '(-> fn1)) 'error)
+    (ok (signals (one::parse '(-> fn1)) 'one/error:one-syntax-error)
         "error occurs: first element is not a connective")
-    (ok (signals (one::parse '(fn1 fn2)) 'error)
+    (ok (signals (one::parse '(fn1 fn2)) 'one/error:one-syntax-error)
         "error occurs: first element is not a connective"))
 
   (testing "some abnormal case"
