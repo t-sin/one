@@ -129,4 +129,8 @@
     (testing "call-if: `?`"
       (ok (rove/core/assertion::equal*
            (one::build '(one::? nil oddp))
-           '(lambda (#:in) (funcall (one/core:$call-if #'oddp #'identity) #:in)))))))
+           '(lambda (#:in) (funcall (one/core:$call-if #'oddp #'identity) #:in))))))
+
+  (testing "complex construction"
+    (diag "to be written...")))
+
