@@ -29,4 +29,5 @@
   (with-output-to-string (out)
     (let ((*standard-output* out))
       (one/io:print* 42))
-    (ok (equal (get-output-stream-string out) "42"))))
+    (ok (equal (get-output-stream-string out) "42
+"))))
