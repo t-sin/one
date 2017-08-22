@@ -92,3 +92,14 @@
   (testing "some abnormal case"
     (ok (equal (one::parse '(one::$)) '(one::$ nil nil))
         "parse OK, empty syntax tree is returned. this maybe raise error on `build`")))
+
+(deftest one-build-test
+  (testing "basic construction"
+    (testing "scan: `<`")
+    (testing "gather: `>`")
+    (testing "fold: `+>`")
+    (testing "compose: `$`"
+      (ok (rove/core/assertion::equal*
+           (one::build '(one::$ nil print))
+           '(lambda (#:in) (funcall #'identity (funcall #'print #:in))))))
+    (testing "call-if: `?`")))

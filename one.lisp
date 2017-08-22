@@ -81,7 +81,7 @@
           (t (error 'one-syntax-error :message
                     (format nil "Parse error: ~s is not a one's connective in ~s" fst body))))))
 
-(defun build (stree &optional (succ-op #'identity))
+(defun build (stree &optional (succ-op '#'identity))
   (flet ((behave-scanning (op optree)
            (let ((in (gensym)))
              (build optree `(lambda (,in) (funcall ($scan ,in ,op) ,succ-op)))))
