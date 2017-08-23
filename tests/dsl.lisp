@@ -150,3 +150,7 @@
                                         (funcall #'identity (funcall #'print #:in)))))
                            *standard-input*)))))
 
+(deftest one-for*-test
+  (testing "shorthand for stdout"
+    (ok (expands '(one:for* - < one:read-line*)
+                 '(one:for - < one/io:read-line* one::$ one/io:print*)))))
