@@ -1,6 +1,7 @@
 # One - Input processing framework
 
 [![Build Status](https://travis-ci.org/t-sin/one.svg?branch=master)](https://travis-ci.org/t-sin/one)
+[![Coverage Status](https://coveralls.io/repos/github/t-sin/one/badge.svg?branch=master)](https://coveralls.io/github/t-sin/one?branch=master)
 
 One provides a framework for processing input like stream, pathname and sequence.
 
@@ -14,6 +15,10 @@ One provides a framework for processing input like stream, pathname and sequence
 ```
 $ ros install t-sin/one
 ```
+
+## Motivation
+
+TBD
 
 ## Usage
 
