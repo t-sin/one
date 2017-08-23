@@ -148,4 +148,5 @@
                              (funcall (one/core:$scan #:in2 #'one:read-line*)
                                       (lambda (#:in)
                                         (funcall #'identity (funcall #'print #:in)))))
-                           '*standard-input*)))))
+                           *standard-input*)))))
+
