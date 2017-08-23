@@ -160,6 +160,7 @@
   (testing "arity of 'slurp' is 1, input from previous operation"
     (multiple-value-bind (slurp barf)
         (one/core:$gather #'identity)
+      (declare (ignore barf))
       (ok (signals (funcall slurp) 'error))
       (ok (funcall slurp 1))
       (ok (signals (funcall slurp 1 2) 'error))))
@@ -238,33 +239,35 @@
 (deftest internal-operator-fold-test
   (testing "`$fold` returns two functions"
     (multiple-value-bind (slurp barf)
-        (one/core:$fold (lambda (x y) y) nil)
+        (one/core:$fold (lambda (x y) (declare (ignore x)) y) nil)
       (ok (typep slurp 'function))
       (ok (typep barf 'function))))
 
   (testing "arity of 'slurp' is 1, input from previous operation"
     (multiple-value-bind (slurp barf)
-        (one/core:$fold (lambda (x y) y) nil)
+        (one/core:$fold (lambda (x y) (declare (ignore x)) y) nil)
+      (declare (ignore barf))
       (ok (signals (funcall slurp) 'error))
       (ok (funcall slurp 1))
       (ok (signals (funcall slurp 2 1) 'error))))
 
   (testing "arity of 'barf' is 1, successor operation"
     (multiple-value-bind (slurp barf)
-        (one/core:$fold (lambda (x y) y) nil)
-      (ok (signals (funcall slurp) 'error))
-      (ok (funcall slurp 1))
-      (ok (signals (funcall slurp 1 2) 'error))))
+        (one/core:$fold (lambda (x y) (declare (ignore x)) y) nil)
+      (funcall slurp 1)
+      (ok (signals (funcall barf) 'error))
+      (ok (funcall barf #'identity))
+      (ok (signals (funcall barf #'identity 2) 'error))))
 
   (testing "folding operation do something like reduce"
     (testing "fold-op takes two parameter: accumrator initialized init-value and input"
       (ok (signals (funcall (one/core:$fold (lambda (x) x) nil) 0) 'error))
-      (ok (signals (funcall (one/core:$fold (lambda (x y) y) nil))))
-      (ok (signals (funcall (one/core:$fold (lambda (x y z) z) nil) 'error))))
+      (ok (signals (funcall (one/core:$fold (lambda (x y) (declare (ignore x)) y) nil))))
+      (ok (signals (funcall (one/core:$fold (lambda (x y z)  (declare (ignore x y)) z) nil) 'error))))
 
     (testing "folding operation pass initial value through in folding process"
       (multiple-value-bind (slurp barf)
-          (one/core:$fold (lambda (x y) x) "ichi")
+          (one/core:$fold (lambda (x y) (declare (ignore y)) x) "ichi")
         (funcall slurp "hachi")
         (funcall slurp "chiko")
         (funcall slurp "bulltaro")
@@ -282,6 +285,6 @@
 
   (testing "successor operation is called"
     (multiple-value-bind (slurp barf)
-       (one/core:$fold (lambda (x y) y) nil)
+       (one/core:$fold (lambda (x y) (declare (ignore x)) y) nil)
       (funcall slurp "hachi")
       (ok (equal (funcall barf (lambda (x) (format nil "~a!!!!" x))) "hachi!!!!")))))
