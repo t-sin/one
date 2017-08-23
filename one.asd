@@ -28,5 +28,5 @@
   :depends-on ("rove"
                "one/tests/io"
                "one/tests/core"
-               "one/tests/dsl")
+               "one/tests/one")
   :perform (test-op (o c) (uiop:symbol-call :rove ':run c)))

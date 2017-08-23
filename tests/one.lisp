@@ -1,7 +1,7 @@
 (in-package :cl-user)
-(defpackage :one/tests/dsl
+(defpackage :one/tests/one
   (:use :cl :rove))
-(in-package :one/tests/dsl)
+(in-package :one/tests/one)
 
 
 (deftest internal-util-test
