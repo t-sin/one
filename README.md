@@ -18,15 +18,47 @@ $ ros install t-sin/one
 
 ## Motivation
 
-TBD
+Sometime, I summarized CSV file with UNIX commands, like this:
+
+```sh
+$ cat data.csv
+id1,1
+id2,2
+id3,3
+$ cat data.csv | awk -F , '{sum+=$2}END{print sum}'
+9
+```
+
+But I thought: awk is complex, I want to write it with Common Lisp. Then, I do:
+
+```sh
+$ cut -d ',' -f 2 data.csv | ros run -e '(print (loop for line = (read *standard-input* nil :eof) until (eq :eof line) sum line))' -q
+9
+```
+
+*WTF? Maybe it's 'cause of the specters!!*
+
+However, with this library that I wrote, that crazy one-liner turns into like this:
+
+```sh
+$ cut -d ',' -f 2 data.csv | ros run -s one -e '(one:for* - < one:read* +> + 0)' -q
+```
+
+*OMG! It's shockingly NICE! 😇*
+
+*One* aimed to write shortly input processing with some feature.
+
+This is the reason which to use *one*.
 
 ## Usage
 
+*One* provides three feature in `one:for` macro:
+
+1. less typing for `*standard-input*` (that is `-`)
+2. loop absctraction over pathnames, streams and sequences
+3. operator composition like pipe on shell or function composition
+
 ### Basis
-
-TBD
-
-### Benefit
 
 TBD
 
@@ -44,6 +76,12 @@ $ ros -s one -e '(one:for #P"file.txt" < one:read-line* $ print)' -q
 $ ros -s one -e '(one:for #P"file.txt" < one:read-line* ? (search "hoge" _) $ print)' -q
 ```
 
+- `cat file.csv | awk -F , '{s+=$2}END{print s}'`
+
+```sh
+# long...
+$ ros run -s one -s split-sequence -e '(one:for* #P"file.csv" < one:read-line* $ (split-sequence:split-sequence #\, _) $ (nth 1 _) $ read-from-string +> + 0)' -q
+```
 
 ## Author
 
