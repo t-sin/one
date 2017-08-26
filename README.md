@@ -62,13 +62,16 @@ $ cut -d ',' -f 2 data.csv | ros run -s one -e '(one:for* - < one:read* +> + 0)'
 
 This is the reason which to use *one*.
 
-## Usage
+
+## Basis
 
 *One* provides three feature in `one:for` macro:
 
 1. less typing for `*standard-input*` (that is `-`)
 2. loop absctraction over pathnames, streams and sequences
 3. operator composition like pipe on shell or function composition
+
+## Usage
 
 We should tell two things to *one*: **input** and **operations** applied to input. Like pipe in UNIX shell, *one* passes and process the result of left process, and so on.
 
