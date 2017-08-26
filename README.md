@@ -58,6 +58,14 @@ This is the reason which to use *one*.
 2. loop absctraction over pathnames, streams and sequences
 3. operator composition like pipe on shell or function composition
 
+We should tell two things to *one*: **input** and **operations** applied to input. Like pipe in UNIX shell, *one* passes and process the result of left process, and so on.
+
+Generally, `one:for` should be used like this (with REGEX like notation for description):
+
+```lisp
+(one:for <input> [<connective> <operation>]*)
+```
+
 ### Basis
 
 TBD
