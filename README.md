@@ -95,6 +95,20 @@ Each *connectives* denotes a behavior. There are five connectives; `$` (composit
 #### `+>`: Folding previous results
 #### `?`: Selection previous results
 
+Selection behavior pass previous operation results through, if the result satisfies `predicate`.
+
+```
+(one:for <input> ... ? <predicate> ...)
+```
+
+Example:
+
+```lisp
+> (one:for '("one" "two" "three" "twenty-one") < cdr ? (search "one" _) $ print)
+"one"
+"twenty-one"
+```
+
 ### Examples
 
 - `cat file.txt`
