@@ -81,9 +81,11 @@ Generally, `one:for` should be used like this (with REGEX like notation for desc
 (one:for <input> [<connective> <operation>]*)
 ```
 
-### Basis
+### Input
 
-TBD
+`<input>` can take **pathname**, **stream** (includes `*standard-input*`) and **sequence**. Reading and looping on stream and sequence is hidden behind `one:for` macro, but we can specify how to read from stream or sequence. For details, see *Operation Composition*.
+
+### Connectives
 
 ### Examples
 
