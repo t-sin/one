@@ -73,7 +73,7 @@ This is the reason which to use *one*.
 
 ## Usage
 
-We should tell two things to *one*: **input** and **operations** applied to input. Like pipe in UNIX shell, *one* passes and process the result of left process, and so on.
+We should tell two things to *one*: **input** and **operations** applied to input. Like pipe in UNIX shell, *one* passes and process the result of left process, and so on. One **operation** is placed with **connective**, it denotes a behavior; composion, reduce, scan on...
 
 Generally, `one:for` should be used like this (with REGEX like notation for description):
 
