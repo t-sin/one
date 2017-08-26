@@ -16,6 +16,18 @@ One provides a framework for processing input like stream, pathname and sequence
 $ ros install t-sin/one
 ```
 
+If you try *one* in REPL, load with quicklisp:
+
+```lisp
+> (ql:quickload :one)
+```
+
+If you use *one* as one-liner, it is useful that this template:
+
+```sh
+$ ros run -s one -e '(one:for ...)' -q
+```
+
 ## Motivation
 
 Sometime, I summarized CSV file with UNIX commands, like this:
