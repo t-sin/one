@@ -87,6 +87,14 @@ Generally, `one:for` should be used like this (with REGEX like notation for desc
 
 ### Connectives
 
+Each *connectives* denotes a behavior. There are five connectives; `$` (composition), `<` (scanning), `>` (gathering), `+>` (folding) and `?` (filtering).
+
+#### `$`: Operation Composition
+#### `<`: Scanning on pathname, stream or sequence
+#### `>`: Gathering previous results
+#### `+>`: Folding previous results
+#### `?`: Selection previous results
+
 ### Examples
 
 - `cat file.txt`
