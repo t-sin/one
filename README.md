@@ -85,6 +85,13 @@ Generally, `one:for` should be used like this (with REGEX like notation for desc
 
 `<input>` can take **pathname**, **stream** (includes `*standard-input*`) and **sequence**. Reading and looping on stream and sequence is hidden behind `one:for` macro, but we can specify how to read from stream or sequence. For details, see *Operation Composition*.
 
+### Operations
+
+TBD
+
+- simplified lambda
+- interpolation `#'`
+
 ### Connectives
 
 Each *connectives* denotes a behavior. There are five connectives; `$` (composition), `<` (scanning), `>` (gathering), `+>` (folding) and `?` (filtering).
