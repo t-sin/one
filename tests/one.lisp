@@ -93,46 +93,49 @@
     (ok (equal (one::parse '(one::$)) '(one::$ nil nil))
         "parse OK, empty syntax tree is returned. this maybe raise error on `build`")))
 
-(deftest one-build-test
-  (testing "basic construction"
-    (testing "scan: `<`"
-      (ok (rove/core/assertion::equal*
-           (one::build '(one::< nil read-line))
-           '(lambda (#:in) (funcall (one/core:$scan #:in #'read-line) #'identity)))))
-    (testing "gather: `>`"
-      (ok (rove/core/assertion::equal*
-           (one::build '(one::> nil (lambda (x) (sort x #'<))))
-           '(multiple-value-bind (#:slurp #:barf)
-                (one/core:$gather (lambda (x) (sort x #'<)))
-              (lambda (#:in)
-                (funcall #:slurp #:in)
-                (funcall #:barf #'identity))))))
-    (testing "fold: `+>`"
-      (ok (rove/core/assertion::equal*
-           (one::build '(one::+> nil +))
-           '(multiple-value-bind (#:slurp #:barf)
-                (one/core:$fold #'+ nil)
-              (lambda (#:in)
-                (funcall #:slurp #:in)
-                (funcall #:barf #'identity)))))
-      (ok (rove/core/assertion::equal*
-           (one::build '(one::+> nil + 1))
-           '(multiple-value-bind (#:slurp #:barf)
-                (one/core:$fold #'+ 1)
-              (lambda (#:in)
-                (funcall #:slurp #:in)
-                (funcall #:barf #'identity))))))
-    (testing "compose: `$`"
-      (ok (rove/core/assertion::equal*
-           (one::build '(one::$ nil print))
-           '(lambda (#:in) (funcall #'identity (funcall #'print #:in))))))
-    (testing "call-if: `?`"
-      (ok (rove/core/assertion::equal*
-           (one::build '(one::? nil oddp))
-           '(lambda (#:in) (funcall (one/core:$call-if #'oddp #'identity) #:in))))))
+(deftest one-build-utility-test
+  (testing "scan: `<`"
+    (ok (rove/core/assertion::equal*
+         (one::build '(one::< nil read-line))
+         '(lambda (#:in) (funcall (one/core:$scan #:in #'read-line) #'identity)))))
 
-  (testing "complex construction"
-    (diag "to be written...")))
+  (testing "gather: `>`"
+    (ok (rove/core/assertion::equal*
+         (one::build '(one::> nil (lambda (x) (sort x #'<))))
+         '(multiple-value-bind (#:slurp #:barf)
+              (one/core:$gather (lambda (x) (sort x #'<)))
+            (lambda (#:in)
+              (funcall #:slurp #:in)
+              (funcall #:barf #'identity))))))
+
+  (testing "fold: `+>`"
+    (ok (rove/core/assertion::equal*
+         (one::build '(one::+> nil +))
+         '(multiple-value-bind (#:slurp #:barf)
+              (one/core:$fold #'+ nil)
+            (lambda (#:in)
+              (funcall #:slurp #:in)
+              (funcall #:barf #'identity)))))
+    (ok (rove/core/assertion::equal*
+         (one::build '(one::+> nil + 1))
+         '(multiple-value-bind (#:slurp #:barf)
+              (one/core:$fold #'+ 1)
+            (lambda (#:in)
+              (funcall #:slurp #:in)
+              (funcall #:barf #'identity))))))
+
+  (testing "compose: `$`"
+    (ok (rove/core/assertion::equal*
+         (one::build '(one::$ nil print))
+         '(lambda (#:in) (funcall #'identity (funcall #'print #:in))))))
+
+  (testing "call-if: `?`"
+    (ok (rove/core/assertion::equal*
+         (one::build '(one::? nil oddp))
+         '(lambda (#:in) (funcall (one/core:$call-if #'oddp #'identity) #:in))))))
+
+(deftest one-build-test
+  (diag "to be written..."))
 
 (deftest one-for-test
   (testing "normal case"
