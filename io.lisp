@@ -17,8 +17,5 @@
 (defun read-line* (stream)
   (read-line stream nil :eof))
 
-(defun read-byte* (stream)
-  (read-byte stream nil :eof))
-
 (defun print* (input)
   (format t "~a~%" input))
