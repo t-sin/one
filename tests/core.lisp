@@ -65,17 +65,17 @@
 
   (testing "pathname"
     (testing "function which is returned by `$scan`"
-      (with-open-file (in (asdf:system-relative-pathname :one "tests/data.txt"))
+      (with-open-file (in (asdf:system-relative-pathname :one #P"tests/data.txt"))
         (ok (typep (one/core:$scan in #'one:read-line*) 'function))))
 
     (testing "arity of returned function is 1"
-      (ok (signals (with-open-file (in (asdf:system-relative-pathname :one "tests/data.txt"))
+      (ok (signals (with-open-file (in (asdf:system-relative-pathname :one #P"tests/data.txt"))
                      (funcall (one/core:$scan in #'one:read-line*)))
                    'error))
-      (ok (null (with-open-file (in (asdf:system-relative-pathname :one "tests/data.txt"))
+      (ok (null (with-open-file (in (asdf:system-relative-pathname :one #P"tests/data.txt"))
                   (funcall (one/core:$scan in #'one:read-line*)
                            #'identity))))
-      (ok (signals (with-open-file (in (asdf:system-relative-pathname :one "tests/data.txt"))
+      (ok (signals (with-open-file (in (asdf:system-relative-pathname :one #P"tests/data.txt"))
                      (funcall (one/core:$scan in #'one:read-line*)
                               #'identity 25))
                    'error)))
