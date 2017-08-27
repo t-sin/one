@@ -40,11 +40,6 @@
 (defun place-holder-p (e)
   (and (symbolp e) (string= (symbol-name e) "_")))
 
-(defun count-place-holder (code)
-  (count '_ code
-         :key #'place-holder-p
-         :test #'string=))
-
 (defun replace-place-holder (var code)
   (loop
      :for e :in code
