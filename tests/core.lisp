@@ -83,20 +83,20 @@
     (testing "read-fn specified is used"
       (multiple-value-bind (read-fn get-fn)
           (make-test-read-fn)
-        (with-open-file (in (asdf:system-relative-pathname :one "tests/data.txt"))
+        (with-open-file (in (asdf:system-relative-pathname :one #P"tests/data.txt"))
           (funcall (one/core:$scan in read-fn) #'identity))
         (print (equal (funcall get-fn) '(:eof "nyan" "wan")))))
 
     (testing "read-fn must be returns :eof when stream end, or signals error"
-      (with-open-file (in (asdf:system-relative-pathname :one "tests/data.txt"))
+      (with-open-file (in (asdf:system-relative-pathname :one #P"tests/data.txt"))
         (ok (null (funcall (one/core:$scan in (lambda (stream) (read-char stream nil :eof)))
                            #'identity))))
-      (with-open-file (in (asdf:system-relative-pathname :one "tests/data.txt"))
+      (with-open-file (in (asdf:system-relative-pathname :one #P"tests/data.txt"))
         (ok (signals (funcall (one/core:$scan in #'read-char) #'identity)
                      'error))))
 
     (testing "op is called for all stream elements"
-      (with-open-file (in (asdf:system-relative-pathname :one "tests/data.txt"))
+      (with-open-file (in (asdf:system-relative-pathname :one #P"tests/data.txt"))
         (funcall (one/core:$scan in #'one:read-char*)
                  (make-chareq-op (format nil "wan~%nyan~%"))))))
 
