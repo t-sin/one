@@ -48,6 +48,12 @@
                       (replace-place-holder var e)
                       e))))
 
+(defun read-curry (stream char1 char2)
+    (declare (ignore char1 char2))
+    (let ((input (gensym)))
+      `(lambda (,input) ,(replace-place-holder input (read stream t nil t)))))
+
+(set-dispatch-macro-character #\# #\/ #'read-curry)
 
 (defun parse (body &optional stree)
   (let ((fst (first body)))
