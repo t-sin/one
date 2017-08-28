@@ -156,4 +156,4 @@
 (deftest one-for*-test
   (testing "shorthand for stdout"
     (ok (expands '(one:for* - < one:read-line*)
-                 '(one:for - < one/io:read-line* one::$ one/io:print*)))))
+                 '(one:for - < one/util:read-line* one::$ one/util:print*)))))

@@ -6,11 +6,10 @@
                 :$call-if
                 :$gather
                 :$fold)
-  (:import-from :one/io
+  (:import-from :one/util
                 :read*
                 :read-char*
                 :read-line*
-                :read-byte*
                 :print*)
   (:import-from :one/error
                 :one-syntax-error)
