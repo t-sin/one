@@ -48,10 +48,15 @@
                       (replace-place-holder var e)
                       e))))
 
-(defun read-curry (stream char1 char2)
+(defun read-curry (stream char1 char2 &optional (recursive-p t))
     (declare (ignore char1 char2))
-    (let ((input (gensym)))
-      `(lambda (,input) ,(replace-place-holder input (read stream t nil t)))))
+    (let ((obj (read stream t nil recursive-p)))
+      (if (atom obj)
+          obj
+          (if (member (car obj) '(function lambda))
+              obj
+              (let ((input (gensym)))
+                `(lambda (,input) ,(replace-place-holder input obj)))))))
 
 (set-dispatch-macro-character #\# #\/ #'read-curry)
 

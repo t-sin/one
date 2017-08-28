@@ -40,6 +40,38 @@
                                                '(lambda () (+ _ _)))
                     '(lambda () (+ -replaced- -replaced-)))))))
 
+(deftest one-curry-reader
+  (testing "reading atom; passing through"
+    (with-input-from-string (in "nil")
+      (ok (rove/core/assertion::equal*
+           (one::read-curry in #\# #\/ nil)
+           nil)))
+    (with-input-from-string (in "42")
+      (ok (rove/core/assertion::equal*
+           (one::read-curry in #\# #\/ nil)
+           42))))
+
+  (testing "reading list"
+    (testing "special treatment for lambda"
+      (with-input-from-string (in "(lambda a b)")
+        (ok (rove/core/assertion::equal*
+             (one::read-curry in #\# #\/ nil)
+             '(lambda a b))))
+      (with-input-from-string (in "(lambda a _)")
+        (ok (rove/core/assertion::equal*
+             (one::read-curry in #\# #\/ nil)
+             '(lambda a _)))))
+
+    (with-input-from-string (in "(a b c)")
+      (ok (rove/core/assertion::equal*
+           (one::read-curry in #\# #\/ nil)
+           '(lambda (#:gensym) (a b c)))))
+
+    (testing "replace `_`"
+      (with-input-from-string (in "(a _ c)")
+        (ok (rove/core/assertion::equal*
+             (one::read-curry in #\# #\/ nil)
+             '(lambda (#:gensym) (a #:gensym c))))))))
 
 (deftest one-parse-test
   (testing "empty body, returns stree"
