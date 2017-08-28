@@ -41,27 +41,6 @@
                     '(lambda () (+ -replaced- -replaced-)))))))
 
 
-(deftest simplified-lambda-test
-    (testing "for symbol, it just wrap with `(function)`"
-      (ok (equal (one::simplified-lambda 'string=)
-                 '#'string=)))
-
-    (testing "for list"
-      (testing "if first element is `lambda`, it is lambda expression, pass through `code`"
-        (ok (equal (one::simplified-lambda '(lambda (x) (* x 2)))
-                   '(lambda (x) (* x 2)))))
-
-      (testing "if first element is `function`, it's a function, pass through `code`"
-        (ok (equal (one::simplified-lambda '(function identity))
-                   '(function identity)))
-        (testing "tricky case ;p"
-          (ok (equal (one::simplified-lambda (read-from-string "#'identity"))
-                     '(function identity)))))
-
-      (testing "otherwise, that is simplified lambda, wrap it with lambda"
-        (ok (expands (one::simplified-lambda '(format nil "  ~a" _))
-                     '#'(lambda (#:slmd) (format nil "  ~a" #:slmd)))))))
-
 (deftest one-parse-test
   (testing "empty body, returns stree"
     (ok (eq (one::parse '() nil) nil))
@@ -133,6 +112,15 @@
     (ok (rove/core/assertion::equal*
          (one::build '(one::? nil oddp))
          '(lambda (#:in) (funcall (one/core:$call-if #'oddp #'identity) #:in))))))
+
+(deftest function-value-test
+    (testing "for atom, wrap with `(function)`"
+      (ok (equal (one::function-value 'string=)
+                 '#'string=)))
+
+    (testing "otherwise, just return it"
+             (ok (one::function-value '(format nil "  ~a" _))
+                 '(format nil "  ~a"))))
 
 (deftest one-build-test
   (diag "to be written..."))

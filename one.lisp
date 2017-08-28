@@ -48,14 +48,6 @@
                       (replace-place-holder var e)
                       e))))
 
-(defun simplified-lambda (code)
-  (if (listp code)
-      (if (member (first code) '(lambda function))
-          code
-          (let ((input (gensym "SLMD")))
-            `(lambda (,input)
-               ,(replace-place-holder input code))))
-      `(function ,code)))
 
 (defun parse (body &optional stree)
   (let ((fst (first body)))
@@ -107,12 +99,17 @@
   (let ((in (gensym)))
     (build optree `(lambda (,in) (funcall ($call-if ,op ,succ-op) ,in)))))
 
+(defun function-value (expr)
+  (if (atom expr)
+      `(function ,expr)
+      expr))
+
 (defun build (stree &optional (succ-op '#'identity))
   (cond ((null stree) succ-op)
         ((= (length stree) 3)
          (destructuring-bind (connective optree op)
              stree
-           (setf op (simplified-lambda op))
+           (setf op (function-value op))
            (ecase connective
              (< (build-scan op optree succ-op))
              (> (build-gather op optree succ-op))
@@ -122,7 +119,7 @@
         ((= (length stree) 4)
          (destructuring-bind (connective optree op init-value)
              stree
-           (setf op (simplified-lambda op))
+           (setf op (function-value op))
            (ecase connective
              (+> (build-fold op init-value optree succ-op)))))))
 
