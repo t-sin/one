@@ -58,7 +58,7 @@
               (let ((input (gensym)))
                 `(lambda (,input) ,(replace-place-holder input obj)))))))
 
-;(set-dispatch-macro-character #\# #\/ #'read-curry)
+(set-dispatch-macro-character #\# #\/ #'read-curry)
 
 (defun parse (body &optional stree)
   (let ((fst (first body)))
@@ -135,16 +135,9 @@
              (+> (build-fold op init-value optree succ-op)))))))
 
 (defmacro for (input &body body)
-  `(progn
-     (eval-when (:execute)
-       #.(defparameter *rt* (copy-readtable))
-       #.(set-dispatch-macro-character #\# #\/ #'read-curry))
-     (prog1
-         ,(if (and (symbolp input) (string= (symbol-name input) "-"))
-              `(funcall ,(build (parse (replace-connective body))) *standard-input*)
-              `(funcall ,(build (parse (replace-connective body))) ,input))
-       (eval-when (:execute)
-         #.(setq *readtable* *rt*)))))
+  (if (and (symbolp input) (string= (symbol-name input) "-"))
+      `(funcall ,(build (parse (replace-connective body))) *standard-input*)
+      `(funcall ,(build (parse (replace-connective body))) ,input)))
 
 (defmacro for* (input &body body)
   `(one:for ,input ,@(append body '($ one:print*))))
