@@ -112,9 +112,9 @@ Each *connectives* denotes a behavior. There are five connectives; `$` (composit
 #### `+>`: Folding previous results
 #### `?`: Selection previous results
 
-Selection behavior pass previous operation results through, if the result satisfies `predicate`.
+Selection behavior passes previous operation results through, if the result satisfies `predicate`.
 
-```
+```lisp
 (one:for <input> ... ? <predicate> ...)
 ```
 
