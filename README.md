@@ -122,6 +122,24 @@ Example:
 ```
 
 #### `<`: Scanning on pathname, stream or sequence
+
+Scanning behavior reads for each element and applies operation on previous result, that can be pathname, stream or sequence.
+
+```lisp
+(one:for <input> ... < <next-fn> ...)
+```
+
+We can specify how to read element, as `<next-fn>`, for instance, `cdr` for lists, `one:read-line*` for stream. Note that `<next-fn>` for streams must be return `:eof` at EOF.
+
+Example:
+
+```lisp
+> (one:for '(:one :two :tree) < cdr $ print)
+:ONE
+:TWO
+:THREE
+```
+
 #### `>`: Gathering previous results
 #### `+>`: Folding previous results
 #### `?`: Selection previous results
