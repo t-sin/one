@@ -48,7 +48,7 @@
                       (replace-place-holder var e)
                       e))))
 
-(defun read-curry (stream char1 char2 &optional (recursive-p t))
+(defun read-operator (stream char1 char2 &optional (recursive-p t))
     (declare (ignore char1 char2))
     (let ((obj (read stream t nil recursive-p)))
       (if (atom obj)
@@ -58,7 +58,7 @@
               (let ((input (gensym)))
                 `(lambda (,input) ,(replace-place-holder input obj)))))))
 
-(set-dispatch-macro-character #\# #\/ #'read-curry)
+(set-dispatch-macro-character #\# #\/ #'read-operator)
 
 (defun parse (body &optional stree)
   (let ((fst (first body)))
