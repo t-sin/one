@@ -87,10 +87,20 @@ Generally, `one:for` should be used like this (with REGEX like notation for desc
 
 ### Operations
 
-TBD
+`<operation>` is a function that takes one argument. Basically, previous result is applied with operation then its result passed next operation. Operations can be those:
 
-- simplified lambda
-- interpolation `#'`
+- function
+- symbol such that it is a function name (`#'` is automatically inserted)
+- lambda expression
+
+For the purpose of less typing, *one* provides reader macro `#/` for lambda expression. Example is like this:
+
+```lisp
+;; this is expanded: (lambda (input) (string= input "ichi"))
+#/(string= _ "ichi")
+```
+
+Note that **the symbol `_` in `#/` is replaced with argument of function
 
 ### Connectives
 
