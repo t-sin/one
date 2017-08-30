@@ -58,14 +58,14 @@ $ cut -d ',' -f 2 data.csv | ros run -s one -e '(one:for* - < one:read* +> + 0)'
 
 *OMG! It's shockingly NICE! 😇*
 
-*One* aimed to write shortly input processing with some feature.
+*One* aimed to write shortly input processing with some features.
 
 This is the reason which to use *one*.
 
 
 ## Basis
 
-*One* provides three feature in `one:for` macro:
+*One* provides three features in `one:for` macro:
 
 1. less typing for `*standard-input*` (that is `-`)
 2. loop absctraction over pathnames, streams and sequences
@@ -73,9 +73,9 @@ This is the reason which to use *one*.
 
 ## Usage
 
-We should tell two things to *one*: **input** and **operations** applied to input. Like pipe in UNIX shell, *one* passes and process the result of left process, and so on. One **operation** is placed with **connective**, it denotes a behavior; composion, reduce, scan on...
+We should tell two things to *one*: **input** and **operations** applied to input. Like pipe in UNIX shell, *one* passes and process the result of left process to right, and so on. One **operation** is placed with **connective**, it denotes a behavior; composition, reduce, scan on...
 
-Generally, `one:for` should be used like this (with REGEX like notation for description):
+Generally, `one:for` should be used like this (with REGEX like notation for explain):
 
 ```lisp
 (one:for <input> [<connective> <operation>]*)
@@ -83,11 +83,11 @@ Generally, `one:for` should be used like this (with REGEX like notation for desc
 
 ### Input
 
-`<input>` can take **pathname**, **stream** (includes `*standard-input*`) and **sequence**. Reading and looping on stream and sequence is hidden behind `one:for` macro, but we can specify how to read from stream or sequence. For details, see *Operation Composition*.
+`<input>` can take **pathname**, **stream** (includes `*standard-input*`) and **sequence**. Reading and looping on stream and sequence is hidden behind `one:for` macro, but we can specify how to read from stream or sequence. For details, see *Scanning on pathname, stream or sequence*.
 
 ### Operations
 
-`<operation>` is a function that takes one argument. Basically, previous result is applied with operation then its result passed next operation. Operations can be those:
+`<operation>` is a function that takes one argument. Basically, previous result is applied with operation then its result passed the next operation. Operations can be those:
 
 - function
 - symbol such that it is a function name (`#'` is automatically inserted)
@@ -223,7 +223,7 @@ $ ros run -s one -s split-sequence -e '(one:for* #P"file.csv" < one:read-line* $
 ### Special thanks
 
 - Masatoshi SANO (https://gist.github.com/snmsts)
-    - He shew me an idea as code snippet, how to process lazy, that give me lots of inspiration.
+    - He showed me an idea as code snippet, how to process lazy, that give me lots of inspiration.
     - https://gist.github.com/snmsts/5abde1792c14c8a36e6c
 
 ## Copyright
