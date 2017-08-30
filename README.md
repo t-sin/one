@@ -141,6 +141,26 @@ Example:
 ```
 
 #### `>`: Gathering previous results
+
+Gathering behavior buffers all results of previous operation call and passes it as a list.
+
+```lisp
+(one:for <input> ... > <operation> ...)
+```
+
+In this case, `<operation>` translates gathering result, like sorting. Note memory usage because of gathering stores all input.
+
+Examples:
+
+```lisp
+> (one:for #P"file.txt" < one:read-line* > identity $ print)
+("line2" "line1" "line3")
+
+> (one:for #P"file.txt" < one:read-line* > #/(sort _ #'string<) $ print)
+("line1" "line2" "line3")
+```
+
+
 #### `+>`: Folding previous results
 #### `?`: Selection previous results
 
