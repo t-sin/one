@@ -107,6 +107,20 @@ Note that **the symbol `_` in `#/` is replaced with argument of function
 Each *connectives* denotes a behavior. There are five connectives; `$` (composition), `<` (scanning), `>` (gathering), `+>` (folding) and `?` (filtering).
 
 #### `$`: Operation Composition
+
+Composition behavior connects previoues functiion to next function.
+
+```lisp
+(one:for <input> ... $ <operation> ...)
+```
+
+Example:
+
+```lisp
+> (one:for "ichi" $ #/(format nil "~a ni" _) $ print)
+"ichi ni"
+```
+
 #### `<`: Scanning on pathname, stream or sequence
 #### `>`: Gathering previous results
 #### `+>`: Folding previous results
