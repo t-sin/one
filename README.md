@@ -160,8 +160,25 @@ Examples:
 ("line1" "line2" "line3")
 ```
 
-
 #### `+>`: Folding previous results
+
+Folding behavior is a special case of gathering operation like `reduce`. This use memory lesser than gathering.
+
+```lisp
+(one:for <input> ... +> <operation> [<init-value>] ...)
+```
+
+`<init-value>` is optional. By default `<init-value>` is nil.
+
+In folding, `<operation>` must take two arguments.
+
+Example:
+
+```lisp
+> (one:for '("line2" "line1" "line3") < cdr +> (lambda (i v) (format nil "~a ~a" i v)) "" $ print)
+" line2 line1 line3"
+```
+
 #### `?`: Selection previous results
 
 Selection behavior passes previous operation results through, if the result satisfies `predicate`.
