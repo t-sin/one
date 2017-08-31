@@ -87,26 +87,26 @@ Generally, `one:for` should be used like this (with REGEX like notation for expl
 
 `<operation>` is a function that takes one argument. Basically, previous result is applied with operation then its result passed the next operation. Operations can be those:
 
-- function
-- symbol such that it is a function name (`#'` is automatically inserted)
-- lambda expression
+- a function
+- a symbol such that it is a function name (`#'` is automatically inserted)
+- a lambda expression
 
 For the purpose of less typing, *one* provides reader macro `#/` for lambda expression. Example is like this:
 
 ```lisp
-;; this is expanded: (lambda (input) (string= input "ichi"))
 #/(string= _ "ichi")
+;; -> (lambda (input) (string= input "ichi"))
 ```
 
-Note that **the symbol `_` in `#/` is replaced with argument of function
+Note that **the symbol `_` in `#/` is replaced with the argument of function
 
 ### Connectives
 
-Each *connectives* denotes a behavior. There are five connectives; `$` (composition), `<` (scanning), `>` (gathering), `+>` (folding) and `?` (filtering).
+Each *connective* denotes a behavior. There are five connectives; `$` (composition), `<` (scanning), `>` (gathering), `+>` (folding) and `?` (filtering).
 
 #### `$`: Operation Composition
 
-Composition behavior connects previoues functiion to next function.
+Composition behavior connects previoues function to next function.
 
 ```lisp
 (one:for <input> ... $ <operation> ...)
@@ -127,7 +127,7 @@ Scanning behavior reads for each element and applies operation on previous resul
 (one:for <input> ... < <next-fn> ...)
 ```
 
-We can specify how to read element, as `<next-fn>`, for instance, `cdr` for lists, `one:read-line*` for stream. Note that `<next-fn>` for streams must be return `:eof` at EOF.
+We can specify how to read element, as `<next-fn>`. For instance `cdr` for lists, `one:read-line*` for stream. Note that `<next-fn>` for streams must be return `:eof` at EOF.
 
 Example:
 
@@ -173,7 +173,8 @@ In folding, `<operation>` must take two arguments.
 Example:
 
 ```lisp
-> (one:for '("line2" "line1" "line3") < cdr +> (lambda (i v) (format nil "~a ~a" i v)) "" $ print)
+> (one:for '("line2" "line1" "line3") < cdr
+    +> (lambda (i v) (format nil "~a ~a" i v)) "" $ print)
 " line2 line1 line3"
 ```
 
