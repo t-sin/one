@@ -5,10 +5,8 @@
 
 One provides a framework for processing input like stream, pathname and sequence.
 
-
-> 「ワンか……。ワンといえば英語の１のことだよね。んー、そうだ！　イチ！　イチにしよう。国際的な名まえだ。いいだろう？」
-> --- のび太, 『子犬イチの国 キズナ編』, 『ドラえもん』, 2010.10.22放映
-
+> "'Woof', huh? The japanese word 'Woof' sounds like the English word 'one'... That's it! 'Ichi' means 'one' in Japanese! So let's name him 'Ichi'! An international name. Isn't that great!"
+> --- Nobita, "The Kingdom of Ichi the Puppy - The Bonding", "Doraemon", Oct. 22, 2010 on air in Japan
 
 ## Installation
 
