@@ -1,0 +1,39 @@
+#!/bin/sh
+#|-*- mode:lisp -*-|#
+#| <Put a one-line description here>
+exec ros -Q -m ros-one -L sbcl-bin -- $0 "$@"
+|#
+(progn ;;init forms
+  (ros:ensure-asdf)
+  #+quicklisp (ql:quickload '(:alexandria
+                              :one
+                              :serapeum
+                              :split-sequence)
+                            :silent t))
+
+(defpackage :ros.script.ros-one.3713178048
+  (:use :cl))
+(in-package :ros.script.ros-one.3713178048)
+
+(defvar +usage+ "
+usage: ros one [-h] [-s SYSTEM]* SEXP
+
+execute SEXP under SYSTEMS used. by default, these packages are loaded:
+
+- alexandria
+- one
+- serapeum
+- split-sequence
+
+")
+
+(defun parse-option (argv)
+  (loop
+     :for idx :from 0 :upto (1- (length argv))
+     :for opt := (nth idx argv)
+     :do (print opt)))
+(defun main (&rest argv)
+  (declare (ignorable argv))
+  (princ +usage+)
+  (print (parse-option argv)))
+;;; vim: set ft=lisp lisp:
