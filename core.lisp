@@ -17,13 +17,6 @@
        :until (eq e :eof)
        :do (funcall op e))))
 
-(defmethod $scan ((pathname pathname) (read-fn function))
-  "Makes scanning behavior. It reads data from `pathname` with `read-fn` and calls successor operations (`op`) until :eof."
-  (lambda (op)
-    (with-open-file (in pathname
-                        :direction :input)
-      (funcall ($scan in read-fn) op))))
-
 (defmethod $scan ((sequence sequence) (step-fn function))
   "Makes scanning behavior. It calls successor operations (`op`) on contents of `sequence`."
   (cond ((listp sequence)
