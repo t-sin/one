@@ -135,9 +135,14 @@
              (+> (build-fold op init-value optree succ-op)))))))
 
 (defmacro for (input &body body)
-  (if (and (symbolp input) (string= (symbol-name input) "-"))
-      `(funcall ,(build (parse (replace-connective body))) *standard-input*)
-      `(funcall ,(build (parse (replace-connective body))) ,input)))
+  (cond ((and (symbolp input) (string= (symbol-name input) "-"))
+         `(funcall ,(build (parse (replace-connective body))) *standard-input*))
+        ((pathnamep input)
+         (let ((in (gensym)))
+           `(with-open-file (,in ,input
+                             :direction :input)
+              (funcall ,(build (parse (replace-connective body))) ,in))))
+        (t `(funcall ,(build (parse (replace-connective body))) ,input))))
 
 (defmacro for* (input &body body)
   `(one:for ,input ,@(append body '($ one:print*))))
