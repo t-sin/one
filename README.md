@@ -26,6 +26,28 @@ If you use *one* as one-liner, it is useful that this template:
 $ ros run -s one -e '(one:for ...)' -q
 ```
 
+### Examples
+
+- `cat file.txt`
+
+```sh
+$ ros -s one -e '(one:for #P"file.txt" < one:read-line* $ print)' -q
+```
+
+- `cat file.txt | grep hoge`
+
+```sh
+$ ros -s one -e '(one:for #P"file.txt" < one:read-line* ? (search "hoge" _) $ print)' -q
+```
+
+- `cat file.csv | awk -F , '{s+=$2}END{print s}'`
+
+```sh
+# long...
+$ ros run -s one -s split-sequence -e '(one:for* #P"file.csv" < one:read-line* $ (split-sequence:split-sequence #\, _) $ (nth 1 _) $ read-from-string +> + 0)' -q
+```
+
+
 ## Motivation
 
 Sometime, I summarized CSV file with UNIX commands, like this:
@@ -192,27 +214,6 @@ Example:
 > (one:for '("one" "two" "three" "twenty-one") < cdr ? (search "one" _) $ print)
 "one"
 "twenty-one"
-```
-
-### Examples
-
-- `cat file.txt`
-
-```sh
-$ ros -s one -e '(one:for #P"file.txt" < one:read-line* $ print)' -q
-```
-
-- `cat file.txt | grep hoge`
-
-```sh
-$ ros -s one -e '(one:for #P"file.txt" < one:read-line* ? (search "hoge" _) $ print)' -q
-```
-
-- `cat file.csv | awk -F , '{s+=$2}END{print s}'`
-
-```sh
-# long...
-$ ros run -s one -s split-sequence -e '(one:for* #P"file.csv" < one:read-line* $ (split-sequence:split-sequence #\, _) $ (nth 1 _) $ read-from-string +> + 0)' -q
 ```
 
 ## Author
