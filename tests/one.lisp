@@ -159,12 +159,20 @@
 
 (deftest one-for-test
   (testing "normal case"
-    (ok (expands '(one:for #P"one.asd" < one:read-line* $ print)
+    (ok (expands '(one:for *standard-input* < one:read-line* $ print)
                  '(funcall (lambda (#:in2)
                              (funcall (one/core:$scan #:in2 #'one:read-line*)
                                       (lambda (#:in)
                                         (funcall #'identity (funcall #'print #:in)))))
-                           #P"one.asd"))))
+                           *standard-input*))))
+  (testing "for pathname"
+    (ok (expands '(one:for #P"one.asd" < one:read-line* $ print)
+                 '(with-open-file (#:instream #P"one.asd" :direction :input)
+                    (funcall (lambda (#:in2)
+                               (funcall (one/core:$scan #:in2 #'one:read-line*)
+                                        (lambda (#:in)
+                                          (funcall #'identity (funcall #'print #:in)))))
+                             #:instream)))))
   (testing "shorthand for standard input"
     (ok (expands '(one:for - < one:read-line* $ print)
                  '(funcall (lambda (#:in2)
