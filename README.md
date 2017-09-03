@@ -28,23 +28,33 @@ $ ros run -s one -e '(one:for ...)' -q
 
 ### Examples
 
-- `cat file.txt`
+- print all lines in `access.log`, it's equivalent to `cat access.log`
 
 ```sh
-$ ros -s one -e '(one:for #P"file.txt" < one:read-line* $ print)' -q
+$ ros -s one -e '(one:for #P"access.log" < one:read-line* $ one:print*)' -q
+xxx.xxx.xxx.xx - - [dd/Jul/2017:17:59:03 +0000] "GET /index.html HTTP/1.1" 206 31140 "-" "UserAgentName"
+xxx.xxx.xxx.xxx - - [dd/Jul/2017:18:00:47 +0000] "GET /foo.js HTTP/1.1" 200 13944 "-" "UserAgentName"
+xxx.xxx.xxx.xxx - - [dd/Jul/2017:18:19:23 +0000] "GET /foo.js HTTP/1.1" 200 13944 "-" "UserAgentName"
+xxx.xxx.xxx.xxx - - [dd/Jul/2017:19:50:55 +0000] "GET /bar.js HTTP/1.1" 200 13944 "-" "Mozilla/5.0 ..."
+xxx.xxx.xxx.xxx - - [dd/Jul/2017:20:03:40 +0000] "GET /bar.js HTTP/1.1" 200 13944 "-" "Mozilla/5.0 ..."
+xxx.xxx.xxx.xxx - - [dd/Jul/2017:20:07:18 +0000] "GET /bazz.html HTTP/1.1" 200 13944 "-" "..."
+xxx.xxx.xxx.xxx - - [dd/Jul/2017:20:07:18 +0000] "GET /foo.html HTTP/1.1" 200 13944 "-" "..."
 ```
 
-- `cat file.txt | grep hoge`
+- print lines s.t. it satisfies regex `.*hoge.*`
 
 ```sh
-$ ros -s one -e '(one:for #P"file.txt" < one:read-line* ? (search "hoge" _) $ print)' -q
+$ ros -s one -e '(one:for #P"access.log" < one:read-line* ? #/(search "foo" _) $ one:print*)' -q
+xxx.xxx.xxx.xxx - - [dd/Jul/2017:18:00:47 +0000] "GET /foo.js HTTP/1.1" 200 13944 "-" "UserAgentName"
+xxx.xxx.xxx.xxx - - [dd/Jul/2017:18:19:23 +0000] "GET /foo.js HTTP/1.1" 200 13944 "-" "UserAgentName"
+xxx.xxx.xxx.xxx - - [dd/Jul/2017:20:07:18 +0000] "GET /foo.html HTTP/1.1" 200 13944 "-" "..."
 ```
 
-- `cat file.csv | awk -F , '{s+=$2}END{print s}'`
+- print sum of proc time for `foo.js`
 
 ```sh
-# long...
-$ ros run -s one -s split-sequence -e '(one:for* #P"file.csv" < one:read-line* $ (split-sequence:split-sequence #\, _) $ (nth 1 _) $ read-from-string +> + 0)' -q
+$ ros run -s one -s cl-ppcre -e '(one:for #P"log.log" < one:read-line* ? #/(search "foo.js" _) $ #/(ppcre:regex-replace ".+200 (\\d+).+" _ "\\1") $ parse-integer +> + 0 $ one:print*)' -q
+27888
 ```
 
 
