@@ -28,6 +28,37 @@ $ ros one '(one:for ...)'
 
 ### Examples
 
+- take standard input and print all lines
+
+```sh
+$ seq 1 10 | ros one '(one:for - < one:read-line* $ one:print*)'
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+```
+
+- take standard input and summate them
+
+```sh
+$ seq 1 10 | ros one '(one:for - < one:read-line* $ parse-integer +> + 0 $ one:print)*
+'
+55
+```
+
+- take standard input and sort them **as string**
+
+```sh
+$ seq 1 10 | shuf | ros one "(one:for - < one:read-line* > #/(sort _ #'string<) $ one:print*)"
+(1 10 2 3 4 5 6 7 8 9)
+```
+
 - print all lines in `access.log`, it's equivalent to `cat access.log`
 
 ```sh
