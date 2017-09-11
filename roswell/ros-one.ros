@@ -58,5 +58,5 @@ execute SEXP under SYSTEMS used. by default, these packages are loaded:
                  (format t "error: cannot find the system: ~s~%" s)
                  (uiop:quit 1))))
     (let ((*read-eval* nil))
-      (read-from-string (option-sexp option)))))
+      (eval (read-from-string (option-sexp option))))))
 ;;; vim: set ft=lisp lisp:
