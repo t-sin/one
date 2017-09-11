@@ -29,14 +29,34 @@ execute SEXP under SYSTEMS used. by default, these packages are loaded:
 
 ")
 
+(defstruct option help systems sexp)
+
 (defun parse-option (argv)
   (loop
      :for idx :from 0 :upto (1- (length argv))
-     :for opt := (nth idx argv)
-     :do (print opt)))
+     :for arg := (nth idx argv)
+     :with option := (make-option)
+     :do (cond ((string= arg "-h") (setf (option-help option) t))
+               ((string= arg "-s")
+                (progn
+                  (incf idx)
+                  (pushnew (nth idx argv) (option-systems option))))
+               (t (progn
+                    (setf (option-sexp option) arg)
+                    (return-from parse-option option))))))
 
 (defun main (&rest argv)
-  (declare (ignorable argv))
-  (princ +usage+)
-  (print (parse-option argv)))
+  (let ((option (parse-option argv)))
+    (when (option-help option)
+      (format t +usage+)
+      (uiop:quit 0))
+    (loop
+       :for s :in (option-systems option)
+       :do (if (ql:where-is-system s)
+               (ql:quickload s :silent t)
+               (progn
+                 (format t "error: cannot find the system: ~s~%" s)
+                 (uiop:quit 1))))
+    (let ((*read-eval* nil))
+      (read-from-string (option-sexp option)))))
 ;;; vim: set ft=lisp lisp:
