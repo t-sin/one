@@ -20,10 +20,10 @@ If you try *one* in REPL, load with quicklisp:
 > (ql:quickload :one)
 ```
 
-If you use *one* as one-liner, it is useful that this template:
+If you use *one* as one-liner, `ros one` subcommand for roswell is useful:
 
 ```sh
-$ ros run -s one -e '(one:for ...)' -q
+$ ros one '(one:for ...)'
 ```
 
 ### Examples
@@ -31,7 +31,7 @@ $ ros run -s one -e '(one:for ...)' -q
 - print all lines in `access.log`, it's equivalent to `cat access.log`
 
 ```sh
-$ ros -s one -e '(one:for #P"access.log" < one:read-line* $ one:print*)' -q
+$ ros one '(one:for #P"access.log" < one:read-line* $ one:print*)'
 xxx.xxx.xxx.xx - - [dd/Jul/2017:17:59:03 +0000] "GET /index.html HTTP/1.1" 206 31140 "-" "UserAgentName"
 xxx.xxx.xxx.xxx - - [dd/Jul/2017:18:00:47 +0000] "GET /foo.js HTTP/1.1" 200 13944 "-" "UserAgentName"
 xxx.xxx.xxx.xxx - - [dd/Jul/2017:18:19:23 +0000] "GET /foo.js HTTP/1.1" 200 13944 "-" "UserAgentName"
@@ -41,10 +41,10 @@ xxx.xxx.xxx.xxx - - [dd/Jul/2017:20:07:18 +0000] "GET /bazz.html HTTP/1.1" 200 1
 xxx.xxx.xxx.xxx - - [dd/Jul/2017:20:07:18 +0000] "GET /foo.html HTTP/1.1" 200 13944 "-" "..."
 ```
 
-- print lines s.t. it satisfies regex `.*hoge.*`
+- print lines s.t. it satisfies regex `.*foo.*`
 
 ```sh
-$ ros -s one -e '(one:for #P"access.log" < one:read-line* ? #/(search "foo" _) $ one:print*)' -q
+$ ros one '(one:for #P"access.log" < one:read-line* ? #/(search "foo" _) $ one:print*)'
 xxx.xxx.xxx.xxx - - [dd/Jul/2017:18:00:47 +0000] "GET /foo.js HTTP/1.1" 200 13944 "-" "UserAgentName"
 xxx.xxx.xxx.xxx - - [dd/Jul/2017:18:19:23 +0000] "GET /foo.js HTTP/1.1" 200 13944 "-" "UserAgentName"
 xxx.xxx.xxx.xxx - - [dd/Jul/2017:20:07:18 +0000] "GET /foo.html HTTP/1.1" 200 13944 "-" "..."
@@ -53,7 +53,7 @@ xxx.xxx.xxx.xxx - - [dd/Jul/2017:20:07:18 +0000] "GET /foo.html HTTP/1.1" 200 13
 - print sum of proc time for `foo.js`
 
 ```sh
-$ ros run -s one -s cl-ppcre -e '(one:for #P"log.log" < one:read-line* ? #/(search "foo.js" _) $ #/(ppcre:regex-replace ".+200 (\\d+).+" _ "\\1") $ parse-integer +> + 0 $ one:print*)' -q
+$ ros one '(one:for #P"access.log" < one:read-line* ? #/(search "foo.js" _) $ #/(ppcre:regex-replace ".+200 (\\d+).+" _ "\\1") $ parse-integer +> + 0 $ one:print*)'
 27888
 ```
 
@@ -83,7 +83,7 @@ $ cut -d ',' -f 2 data.csv | ros run -e '(print (loop for line = (read *standard
 However, with this library that I wrote, that crazy one-liner turns into like this:
 
 ```sh
-$ cut -d ',' -f 2 data.csv | ros run -s one -e '(one:for* - < one:read* +> + 0)' -q
+$ cut -d ',' -f 2 data.csv | ros one '(one:for* - < one:read* +> + 0)'
 ```
 
 *OMG! It's shockingly NICE! 😇*
