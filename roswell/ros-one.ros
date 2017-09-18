@@ -40,7 +40,8 @@ execute SEXP under SYSTEMS used. by default, these packages are loaded:
      :for arg := (nth idx argv)
      :with option := (make-option)
      :finally (return-from parse-option option)
-     :do (cond ((string= arg "-h") (setf (option-help option) t))
+     :do (cond ((or (string= arg "-h") (string= arg "--help"))
+                (setf (option-help option) t))
                ((string= arg "-r")
                 (progn
                   (incf idx)
