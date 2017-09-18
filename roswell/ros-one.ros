@@ -77,5 +77,9 @@ execute SEXP under SYSTEMS used. by default, these packages are loaded:
                  (format t "error: cannot find the system: ~s~%" s)
                  (uiop:quit 1))))
     (let ((*read-eval* nil))
-      (eval (read-from-string (option-sexp option))))))
+      (handler-case
+          (eval (read-from-string (option-sexp option)))
+        (error (c)
+          (format t "~a~%" c)
+          (uiop:quit 1))))))
 ;;; vim: set ft=lisp lisp:
