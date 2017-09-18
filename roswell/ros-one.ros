@@ -24,11 +24,11 @@ usage: ros one [-h] [-r SYSTEM]* [-u SYSTEM]* SEXP
 
 execute SEXP under SYSTEMS used. by default, these packages are loaded:
 
-- alexandria
-- cl-ppcre
-- one
-- serapeum
-- split-sequence
+- alexandria (use-package)
+- cl-ppcre (require)
+- one (require)
+- serapeum (use-package)
+- split-sequence (use-package)
 
 ")
 
