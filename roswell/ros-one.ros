@@ -65,7 +65,7 @@ execute SEXP under SYSTEMS used. by default, these packages are loaded:
        :do (if (ql:where-is-system s)
                (ql:quickload s :silent t)
                (progn
-                 (format t "error: cannot find the system: ~s~%" s)
+                 (format *error-output* "error: cannot find the system: ~s~%" s)
                  (uiop:quit 1))))
     (loop
        :for s :in (option-used-systems option)
@@ -74,12 +74,12 @@ execute SEXP under SYSTEMS used. by default, these packages are loaded:
                  (ql:quickload s :silent t)
                  (use-package (string-upcase s)))
                (progn
-                 (format t "error: cannot find the system: ~s~%" s)
+                 (format *error-output* "error: cannot find the system: ~s~%" s)
                  (uiop:quit 1))))
     (let ((*read-eval* nil))
       (handler-case
           (eval (read-from-string (option-sexp option)))
         (error (c)
-          (format t "~a~%" c)
+          (format *error-output* "~a~%" c)
           (uiop:quit 1))))))
 ;;; vim: set ft=lisp lisp:
