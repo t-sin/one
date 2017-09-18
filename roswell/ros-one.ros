@@ -17,7 +17,7 @@ exec ros -Q -m ros-one -L sbcl-bin -- $0 "$@"
 (in-package :ros.script.ros-one.3713178048)
 
 (defvar +usage+ "
-usage: ros one [-h] [-s SYSTEM]* SEXP
+usage: ros one [-h] [-r SYSTEM]* [-u SYSTEM]* SEXP
 
 execute SEXP under SYSTEMS used. by default, these packages are loaded:
 
@@ -29,7 +29,7 @@ execute SEXP under SYSTEMS used. by default, these packages are loaded:
 
 ")
 
-(defstruct option help systems sexp)
+(defstruct option help required-systems used-systems sexp)
 
 (defun parse-option (argv)
   (loop
@@ -38,10 +38,14 @@ execute SEXP under SYSTEMS used. by default, these packages are loaded:
      :with option := (make-option)
      :finally (return-from parse-option option)
      :do (cond ((string= arg "-h") (setf (option-help option) t))
-               ((string= arg "-s")
+               ((string= arg "-r")
                 (progn
                   (incf idx)
-                  (pushnew (nth idx argv) (option-systems option))))
+                  (pushnew (nth idx argv) (option-required-systems option))))
+               ((string= arg "-u")
+                (progn
+                  (incf idx)
+                  (pushnew (nth idx argv) (option-used-systems option))))
                (t (progn
                     (setf (option-sexp option) arg)
                     (return-from parse-option option))))))
@@ -54,9 +58,18 @@ execute SEXP under SYSTEMS used. by default, these packages are loaded:
       (format t +usage+)
       (uiop:quit 0))
     (loop
-       :for s :in (option-systems option)
+       :for s :in (option-required-systems option)
        :do (if (ql:where-is-system s)
                (ql:quickload s :silent t)
+               (progn
+                 (format t "error: cannot find the system: ~s~%" s)
+                 (uiop:quit 1))))
+    (loop
+       :for s :in (option-used-systems option)
+       :do (if (ql:where-is-system s)
+               (progn
+                 (ql:quickload s :silent t)
+                 (use-package (string-upcase s)))
                (progn
                  (format t "error: cannot find the system: ~s~%" s)
                  (uiop:quit 1))))
