@@ -2,6 +2,7 @@
 (defpackage :one/error
   (:use :cl)
   (:export :one-error
+           :one-package-error
            :one-syntax-error))
 (in-package :one/error)
 
@@ -12,3 +13,5 @@
              (format stream "One error.~%~a~%" (message condition)))))
 
 (define-condition one-syntax-error (one-error) ())
+
+(define-condition one-package-error (one-error) ())

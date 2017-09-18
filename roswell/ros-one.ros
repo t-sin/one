@@ -54,6 +54,17 @@ execute SEXP under SYSTEMS used. by default, these packages are loaded:
                     (setf (option-sexp option) arg)
                     (return-from parse-option option))))))
 
+(defun load-systems (systems &optional (use-p nil))
+  (loop
+     :for s :in systems
+     :do (if (ql:where-is-system s)
+             (progn
+               (ql:quickload s :silent t)
+               (when use-p
+                 (use-package (string-upcase s))))
+             (error 'one:one-package-error :message
+                    (format nil "cannot find the system: ~s~%" s)))))
+
 (defun main (&rest argv)
   (when (zerop (length argv))
     (uiop:quit 0))
@@ -61,26 +72,15 @@ execute SEXP under SYSTEMS used. by default, these packages are loaded:
     (when (option-help option)
       (format t +usage+)
       (uiop:quit 0))
-    (loop
-       :for s :in (option-required-systems option)
-       :do (if (ql:where-is-system s)
-               (ql:quickload s :silent t)
-               (progn
-                 (format *error-output* "error: cannot find the system: ~s~%" s)
-                 (uiop:quit 1))))
-    (loop
-       :for s :in (option-used-systems option)
-       :do (if (ql:where-is-system s)
-               (progn
-                 (ql:quickload s :silent t)
-                 (use-package (string-upcase s)))
-               (progn
-                 (format *error-output* "error: cannot find the system: ~s~%" s)
-                 (uiop:quit 1))))
-    (let ((*read-eval* nil))
-      (handler-case
-          (eval (read-from-string (option-sexp option)))
-        (error (c)
-          (format *error-output* "~a~%" c)
-          (uiop:quit 1))))))
+    (handler-case
+        (progn
+          (load-systems (option-required-systems option))
+          (load-systems (option-used-systems option) t)
+          (let ((*read-eval* nil))
+            (eval (read-from-string (option-sexp option)))))
+      (error (c)
+        (format *error-output* "~a" c)
+        (uiop:quit 1)))))
+    
+
 ;;; vim: set ft=lisp lisp:

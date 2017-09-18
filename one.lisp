@@ -12,12 +12,18 @@
                 :read-line*
                 :print*)
   (:import-from :one/error
+                :one-error
+                :one-package-error
                 :one-syntax-error)
   (:export :read*
            :read-char*
            :read-line*
            :read-byte*
            :print*
+
+           :one-error
+           :one-package-error
+           :one-syntax-error
 
            :for
            :for*))
