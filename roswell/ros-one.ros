@@ -47,6 +47,8 @@ execute SEXP under SYSTEMS used. by default, these packages are loaded:
                     (return-from parse-option option))))))
 
 (defun main (&rest argv)
+  (when (zerop (length argv))
+    (uiop:quit 0))
   (let ((option (parse-option argv)))
     (when (option-help option)
       (format t +usage+)
