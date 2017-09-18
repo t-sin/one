@@ -10,7 +10,10 @@ exec ros -Q -m ros-one -L sbcl-bin -- $0 "$@"
                               :one
                               :serapeum
                               :split-sequence)
-                            :silent t))
+                            :silent t)
+  (use-package :alexandria)
+  (use-package :serapeum)
+  (use-package :split-sequence))
 
 (defpackage :ros.script.ros-one.3713178048
   (:use :cl))
