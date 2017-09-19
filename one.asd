@@ -19,7 +19,7 @@
   :description "Input processing framework"
   :version "0.1"
   :author "Shinichi TANAKA"
-  :license "MIT"
+  :license "LLGPL"
   :depends-on ("one/one")
   :in-order-to ((test-op (test-op :one/tests))))
 
