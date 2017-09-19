@@ -10,10 +10,7 @@ exec ros -Q -m ros-one -L sbcl-bin -- $0 "$@"
                               :one
                               :serapeum
                               :split-sequence)
-                            :silent t)
-  (use-package :alexandria)
-  (use-package :serapeum)
-  (use-package :split-sequence))
+                            :silent t))
 
 (defpackage :ros.script.ros-one.3713178048
   (:use :cl))
@@ -32,13 +29,18 @@ execute SEXP under SYSTEMS used. by default, these packages are loaded:
 
 ")
 
+(defparameter default-used-systems
+  '(:alexandria
+    :serapeum
+    :split-sequence))
+
 (defstruct option help required-systems used-systems sexp)
 
 (defun parse-option (argv)
   (loop
      :for idx :from 0 :upto (1- (length argv))
      :for arg := (nth idx argv)
-     :with option := (make-option)
+     :with option := (make-option :used-systems default-used-systems)
      :finally (return-from parse-option option)
      :do (cond ((or (string= arg "-h") (string= arg "--help"))
                 (setf (option-help option) t))
